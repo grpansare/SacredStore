@@ -12,7 +12,7 @@ import {
 import ProductPage from "./ProductsPage"; // Import ProductPage
 import Navbar from "../components/Navbar"; // Import Navbar (adjust path if needed)
 
-const Homepage = () => {
+const Home = () => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -481,4 +481,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default Home
