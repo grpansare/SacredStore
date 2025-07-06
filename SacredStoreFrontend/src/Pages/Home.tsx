@@ -86,44 +86,46 @@ const Home = () => {
     },
   ];
 
-  const categories = [
-    {
-      name: "Idols & Statues",
-      icon: "🕉️",
-      count: "150+ Items",
-      color: "from-orange-400 to-red-500",
-    },
-    {
-      name: "Religious Books",
-      icon: "📚",
-      count: "200+ Items",
-      color: "from-blue-400 to-indigo-500",
-    },
-    {
-      name: "Pooja Items",
-      icon: "🪔",
-      count: "300+ Items",
-      color: "from-yellow-400 to-orange-500",
-    },
-    {
-      name: "Jewelry",
-      icon: "📿",
-      count: "80+ Items",
-      color: "from-purple-400 to-pink-500",
-    },
-    {
-      name: "Home Décor",
-      icon: "🏮",
-      count: "120+ Items",
-      color: "from-green-400 to-blue-500",
-    },
-    {
-      name: "Incense",
-      icon: "🌸",
-      count: "90+ Items",
-      color: "from-pink-400 to-rose-500",
-    },
-  ];
+
+const categories = [
+  {
+    name: 'Books',
+    count: '120 items',
+    icon: '📚', // Example icon
+    color: 'from-blue-400 to-blue-600',
+  },
+  {
+    name: 'Idols',
+    count: '85 items',
+    icon: '🙏', // Example icon
+    color: 'from-green-400 to-green-600',
+  },
+  {
+    name: 'Jewelry',
+    count: '50 items',
+    icon: '💎', // Example icon
+    color: 'from-purple-400 to-purple-600',
+  },
+  {
+    name: 'Apparel',
+    count: '75 items',
+    icon: '👕', // Example icon
+    color: 'from-red-400 to-red-600',
+  },
+  {
+    name: 'Home Decor',
+    count: '90 items',
+    icon: '🏡', // Example icon
+    color: 'from-yellow-400 to-yellow-600',
+  },
+ 
+  {
+    name: 'Music',
+    count: '40 items', // Example count, adjust as needed
+    icon: '🎵', // A musical note icon
+    color: 'from-pink-400 to-pink-600', // A vibrant color for music
+  },
+];
 
   const heroSlides = [
     {

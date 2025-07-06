@@ -2,14 +2,19 @@ package com.ecomm.app.models;
 
 
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +36,8 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    // Constructors
+    private String phone; // Optional
+    private String address; // Optional
     public User() {}
 
     public User(String email, String password) {
@@ -48,6 +54,23 @@ public class User {
 
     public String getFullname() {
 		return fullname;
+	}
+
+    
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public void setFullname(String fullname) {
@@ -83,4 +106,18 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // For simplicity, let's assume all users have a "ROLE_USER"
+        // In a real app, you'd manage roles (e.g., enum, separate entity)
+        return Collections.singletonList(() -> "ROLE_USER");
+    }
+
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -1,6 +1,10 @@
-import React from "react";
+// src/components/Footer.jsx
+import React from 'react';
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className="bg-gray-800 text-white py-12 px-4">
       <div className="max-w-7xl mx-auto">
@@ -8,7 +12,7 @@ const Footer = () => {
           <div>
             <div
               className="flex items-center space-x-3 mb-4 cursor-pointer"
-              onClick={() => setSelectedCategory(null)}
+              onClick={() => navigate('/')}
             >
               <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold">🕉</span>
@@ -34,7 +38,7 @@ const Footer = () => {
                   className="hover:text-white transition-colors"
                   onClick={(e) => {
                     e.preventDefault();
-                    setSelectedCategory("All Products");
+                    navigate("/products/all-products");
                   }}
                 >
                   Products
@@ -96,8 +100,8 @@ const Footer = () => {
         </div>
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
           <p>
-            &copy; 2025 Divine Store. All rights reserved. | Developed by Ganesh
-            for Secbyte Technologies
+            &copy; 2025 Divine Store. All rights reserved. | Developed by
+            Ganesh for Secbyte Technologies
           </p>
         </div>
       </div>

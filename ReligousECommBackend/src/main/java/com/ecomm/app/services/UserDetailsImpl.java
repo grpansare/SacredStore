@@ -5,6 +5,10 @@ package com.ecomm.app.services;
 
 import com.ecomm.app.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,46 +17,41 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+@Data
+@AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-    private static final long serialVersionUID = 1L;
 
     private Long id;
-
-    private String email; // Changed from username to email
-
-    @JsonIgnore
+    private String email;
     private String password;
+    private String fullname; // Include necessary fields from your User entity
+    private String phone;
+    private String address;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String password, // Changed constructor parameter
-                           Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.authorities = authorities;
-    }
-
+    // Static method to build UserDetailsImpl from your User entity
     public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER")); // Or map roles from user
+        // If your User entity has actual roles, map them:
+        // List<GrantedAuthority> authorities = user.getRoles().stream()
+        //         .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+        //         .collect(Collectors.toList());
 
         return new UserDetailsImpl(
                 user.getId(),
-                user.getEmail(), // Use email here
+                user.getEmail(),
                 user.getPassword(),
+                user.getFullname(),
+                user.getPhone(),
+                user.getAddress(),
                 authorities);
     }
 
+    // --- UserDetails Interface Implementations ---
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     @Override
@@ -61,8 +60,8 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public String getUsername() { // This method provides the principal's identifier, now the email
-        return email;
+    public String getUsername() {
+        return email; // Often email is used as username
     }
 
     @Override
@@ -85,13 +84,8 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
-    }
+    // Add a method to get the User entity if needed, or simply expose the fields
+    // public User getUser() {
+    //    return new User(id, email, password, fullname, phone, address, createdAt); // Be careful with password
+    // }
 }

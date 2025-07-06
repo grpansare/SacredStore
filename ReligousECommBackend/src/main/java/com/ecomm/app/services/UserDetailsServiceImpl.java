@@ -3,6 +3,8 @@ package com.ecomm.app.services;
 
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,4 +28,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return UserDetailsImpl.build(user);
     }
+    
+    @Transactional(readOnly = true)
+    public Optional<User> getUserProfile(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Transactional
+    public User updateUserProfile(Long userId, User updatedUser) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
+
+        existingUser.setFullname(updatedUser.getFullname());
+        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setAddress(updatedUser.getAddress());
+
+        return userRepository.save(existingUser);
+    }
+	public Optional<User> getUserById(Long id) {
+		// TODO Auto-generated method stub
+		return userRepository.findById(id)
+                	;
+	}
 }

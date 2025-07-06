@@ -1,3 +1,4 @@
+// src/Homepage.jsx
 import React, { useState, useEffect } from "react";
 import {
   Search,
@@ -9,35 +10,14 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import ProductPage from "./ProductsPage"; // Import ProductPage
-import Navbar from "../components/Navbar"; // Import Navbar (adjust path if needed)
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-const Homepage = () => {
+// ProductPage and Navbar are no longer imported here, as they are handled by App.jsx and Routes.
 
+const Homepage = ({ handleAddToCart }) => {
+  // Receive handleAddToCart as prop
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [cartItems, setCartItems] = useState([]); // New state for cart items
-
-  // Function to add item to cart
-  const handleAddToCart = (productToAdd) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find(
-        (item) => item.id === productToAdd.id
-      );
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === productToAdd.id
-            ? { ...item, quantity: item.quantity + productToAdd.quantity }
-            : item
-        );
-      } else {
-        return [
-          ...prevItems,
-          { ...productToAdd, quantity: productToAdd.quantity || 1 },
-        ]; // Ensure quantity is at least 1
-      }
-    });
-  };
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Mock data (same as before)
   const featuredProducts = [
@@ -50,7 +30,7 @@ const Homepage = () => {
         "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
       rating: 4.8,
       reviews: 124,
-      category: "Idols & Statues", // Match category name with ProductPage
+      category: "Idols & Statues",
     },
     {
       id: 2,
@@ -60,7 +40,7 @@ const Homepage = () => {
       image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
       rating: 4.9,
       reviews: 89,
-      category: "Religious Books", // Match category name with ProductPage
+      category: "Religious Books",
     },
     {
       id: 3,
@@ -71,7 +51,7 @@ const Homepage = () => {
         "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=400",
       rating: 4.7,
       reviews: 156,
-      category: "Jewelry", // Match category name with ProductPage
+      category: "Jewelry",
     },
     {
       id: 4,
@@ -82,7 +62,7 @@ const Homepage = () => {
         "https://images.unsplash.com/photo-1604608672516-f1b2147880a0?w=400",
       rating: 4.6,
       reviews: 203,
-      category: "Pooja Items", // Match category name with ProductPage
+      category: "Pooja Items",
     },
   ];
 
@@ -122,6 +102,12 @@ const Homepage = () => {
       icon: "🌸",
       count: "90+ Items",
       color: "from-pink-400 to-rose-500",
+    },
+    {
+      name: "Music",
+      count: "40 items", // Example count, adjust as needed
+      icon: "🎵", // A musical note icon
+      color: "from-pink-400 to-pink-600", // A vibrant color for music
     },
   ];
 
@@ -163,17 +149,16 @@ const Homepage = () => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [heroSlides.length]); // Add heroSlides.length to dependency array
 
-  // ProductCard for Homepage (similar to ProductPage but without direct link to detail)
   const HomepageProductCard = ({ product }) => {
     const [addedToCartFeedback, setAddedToCartFeedback] = useState(false);
 
     const handleAddToCartClick = (e) => {
-      e.stopPropagation(); // Prevent any parent click handlers
-      handleAddToCart({ ...product, quantity: 1 }); // Pass to global cart
+      e.stopPropagation();
+      handleAddToCart({ ...product, quantity: 1 });
       setAddedToCartFeedback(true);
-      setTimeout(() => setAddedToCartFeedback(false), 1000); // Hide feedback after 1 second
+      setTimeout(() => setAddedToCartFeedback(false), 1000);
     };
 
     return (
@@ -242,34 +227,22 @@ const Homepage = () => {
     );
   };
 
-  // Conditional render for ProductPage
-  if (selectedCategory) {
-    return (
-      <ProductPage
-        category={selectedCategory}
-        onBack={() => setSelectedCategory(null)}
-        onAddToCart={handleAddToCart}
-      />
-    );
-  }
+  // No conditional rendering for ProductPage here.
+  // It's handled by React Router in App.jsx
 
   return (
     <div className="min-h-screen bg-gray-50">
-     
-      <Navbar
-        setSelectedCategory={setSelectedCategory}
-        cartItems={cartItems}
-      />
-
       {/* Hero Section */}
-      <section className="relative h-96 md:h-[500px] overflow-hidden">
+      <section className="relative h-96 md:h-[550px] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-400/40 to-red-400/40 z-10"></div>
 
         <img
           src={heroSlides[currentSlide].image}
           alt="Hero"
-          className="absolute inset-0 w-full h-full object-center  z-0"
+     className="absolute inset-0 w-full h-full object-center z-0"
+
         />
+
         <div className="relative z-20 flex items-center justify-center h-full text-center text-white px-4">
           <div className="max-w-3xl">
             <h2 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in">
@@ -298,7 +271,6 @@ const Homepage = () => {
           ))}
         </div>
       </section>
-
       {/* Categories Section */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-12">
@@ -309,12 +281,20 @@ const Homepage = () => {
             Discover our wide range of spiritual and religious products
           </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories.map((category, index) => (
             <div
               key={index}
               className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group"
-              onClick={() => setSelectedCategory(category.name)}
+              // Use navigate to go to the product page for this category
+              onClick={() =>
+                navigate(
+                  `/products/${category.name
+                    .toLowerCase()
+                    .replace(/ & /g, "-")
+                    .replace(/ /g, "-")}`
+                )
+              }
             >
               <div
                 className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform`}
@@ -343,7 +323,7 @@ const Homepage = () => {
           </div>
           <button
             className="hidden md:flex items-center gap-2 text-orange-600 hover:text-orange-700 font-medium transition-colors"
-            onClick={() => setSelectedCategory("All Products")}
+            onClick={() => navigate("/products/all-products")} // Navigate to all products
           >
             View All
             <ChevronRight className="w-5 h-5" />
@@ -376,107 +356,7 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div
-                className="flex items-center space-x-3 mb-4 cursor-pointer"
-                onClick={() => setSelectedCategory(null)}
-              >
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold">🕉</span>
-                </div>
-                <h3 className="text-xl font-bold">Divine Store</h3>
-              </div>
-              <p className="text-gray-400">
-                Your trusted partner for authentic religious and spiritual
-                products.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="hover:text-white transition-colors"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSelectedCategory("All Products");
-                    }}
-                  >
-                    Products
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    FAQs
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Customer Service</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Shipping Info
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Returns
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Support
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Track Order
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Connect With Us</h4>
-              <p className="text-gray-400 mb-4">
-                Subscribe to get special offers and updates
-              </p>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-1 px-4 py-2 rounded-l-lg text-gray-800 focus:outline-none"
-                />
-                <button className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-r-lg transition-colors">
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>
-              &copy; 2025 Divine Store. All rights reserved. | Developed by
-              Ganesh for Secbyte Technologies
-            </p>
-          </div>
-        </div>
-      </footer>
+      {/* Footer - Will be rendered by App.jsx */}
     </div>
   );
 };

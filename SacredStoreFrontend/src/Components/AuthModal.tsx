@@ -12,6 +12,9 @@ import {
 } from "lucide-react";
 import AuthService from "../api/auth"; // Ensure this path is correct
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from "../store/UserSlice";
+
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -44,6 +47,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -61,10 +65,30 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     try {
       if (isLogin) {
         // --- Login Logic ---
-        await AuthService.login(formData.email, formData.password);
-        setMessage("Login successful!");
-        navigate("/profile");
-        window.location.reload();
+        const res=  await AuthService.login(formData.email, formData.password);
+        console.log(res);
+        dispatch(loginSuccess(res))
+       if(res.roles[0] == "ROLE_ADMIN"){
+          navigate("/admin");
+        }else if(res.roles[0] == "ROLE_USER"){ 
+             setMessage("Login successful!");
+          onClose()
+          setFormData({
+            firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agreeToTerms: false,   
+          });
+          setMessage("");
+          setIsLogin(true);
+          // window.location.reload();
+        navigate("/");
+        }        
+     
+       
+        // window.location.reload();
       } else {
         // --- Register Logic ---
         if (formData.password !== formData.confirmPassword) {
@@ -211,10 +235,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {!isLogin && (
               <div className="grid grid-cols-2 gap-3 animate-in slide-in-from-top duration-300">
                 <div className="relative">
-                  <User
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={18}
-                  />
+  <User
+  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10"
+  size={18}
+/>
                   <input
                     type="text"
                     name="firstName"
@@ -226,7 +250,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="relative">
                   <User
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10" 
                     size={18}
                   />
                   <input
@@ -241,10 +265,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
             )}
 
-            {/* Email Field */}
+        
             <div className="relative">
               <Mail
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10"
                 size={18}
               />
               <input
@@ -261,7 +285,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {/* Password Field */}
             <div className="relative">
               <Lock
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10"
                 size={18}
               />
               <input
@@ -286,7 +310,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {!isLogin && (
               <div className="relative animate-in slide-in-from-top duration-300">
                 <Lock
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10"
                   size={18}
                 />
                 <input
