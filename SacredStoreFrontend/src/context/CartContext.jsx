@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
-
+import { useSelector } from "react-redux";
+import axios from "axios";
 const CartContext = createContext();
 
-// Function to get the initial cart state from localStorage
 const getInitialCartState = () => {
   try {
     const savedCart = localStorage.getItem("divineStoreCart"); // Use a specific key
@@ -38,7 +38,7 @@ const cartReducer = (state, action) => {
           : item
       );
       // Filter out items with quantity 0 or less
-      return updatedState.filter(item => item.quantity > 0);
+      return updatedState.filter((item) => item.quantity > 0);
 
     case "CLEAR_CART":
       return [];
@@ -55,10 +55,9 @@ const cartReducer = (state, action) => {
 };
 
 export const CartProvider = ({ children }) => {
-
   const [cart, dispatch] = useReducer(cartReducer, [], getInitialCartState);
+  const { user } = useSelector((state) => state.user);
 
-  
   useEffect(() => {
     try {
       localStorage.setItem("divineStoreCart", JSON.stringify(cart)); // Use a consistent key
@@ -67,8 +66,45 @@ export const CartProvider = ({ children }) => {
     }
   }, [cart]);
 
-  const addToCart = (product) => {
+  useEffect(() => {
+    const loadCartFromBackend = async () => {
+      if (user && user.id) {
+        try {
+          const res = await axios.get(
+            `http://localhost:8080/api/cart/${user.id}`
+          );
+          const backendCartItems = res.data.items.map((item) => ({
+            ...item.product,
+            quantity: item.quantity,
+          }));
+          dispatch({ type: "LOAD_CART", payload: backendCartItems });
+        } catch (error) {
+          console.error("Failed to load cart from backend:", error);
+        }
+      }
+    };
+
+    loadCartFromBackend();
+  }, [user]);
+
+  const addToCart = async (product) => {
     dispatch({ type: "ADD_TO_CART", payload: product });
+
+    if (user && user.accessToken) {
+      try {
+        await axios.post(
+          "http://localhost:8080/api/cart/add",
+          { productId: product.id, quantity: 1 },
+          {
+            headers: {
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Failed to sync cart with backend:", error);
+      }
+    }
   };
 
   const removeFromCart = (productId) => {

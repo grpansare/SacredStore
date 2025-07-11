@@ -64,18 +64,19 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+       User user=userRepository.findByEmail(loginRequest.getEmail()).get();
+        
+      
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+     
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 refreshToken.getToken(),
-                userDetails.getId(),
-                userDetails.getUsername(), // UserDetails.getUsername() now returns email
-                roles));
+                user.getId(),
+                user.getUsername(), 
+                
+                user.getRoles()));
     }
 
     @PostMapping("/signup")

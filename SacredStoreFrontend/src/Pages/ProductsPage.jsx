@@ -1,10 +1,20 @@
 // src/ProductsPage.jsx
 import React, { useState, useEffect } from "react";
-import { Star, ShoppingCart, Heart, Filter, X, ChevronDown, Search } from "lucide-react";
+import {
+  Star,
+  ShoppingCart,
+  Heart,
+  Filter,
+  X,
+  ChevronDown,
+  Search,
+} from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useCart } from '../context/CartContext'; // Import the useCart hook
+import { useCart } from "../context/CartContext"; // Import the useCart hook
+import axios from "axios";
 
-const ProductPage = () => { // Remove handleAddToCart prop
+const ProductPage = () => {
+ 
   const { categoryName } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -13,138 +23,67 @@ const ProductPage = () => { // Remove handleAddToCart prop
   const [showFilters, setShowFilters] = useState(false);
 
   // Filter states
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [selectedRating, setSelectedRating] = useState(0);
-  const [sortBy, setSortBy] = useState('default');
+  const [sortBy, setSortBy] = useState("default");
   const [availableCategories, setAvailableCategories] = useState([]);
 
-  // Use the useCart hook to get addToCart function
+
   const { addToCart } = useCart();
 
-  // Mock product data (as you had it)
-  const allProducts = [
-    {
-      id: 1,
-      name: "Lord Ganesha Brass Idol",
-      price: 1299,
-      originalPrice: 1599,
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
-      rating: 4.8,
-      reviews: 124,
-      category: "Idols & Statues",
-      description: "Beautifully crafted brass idol of Lord Ganesha, perfect for your home altar or as a decorative piece.",
-    },
-    {
-      id: 2,
-      name: "Bhagavad Gita (Hindi)",
-      price: 299,
-      originalPrice: 399,
-      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
-      rating: 4.9,
-      reviews: 89,
-      category: "Religious Books",
-      description: "The complete Bhagavad Gita in Hindi, a timeless scripture offering profound spiritual wisdom.",
-    },
-    {
-      id: 3,
-      name: "Rudraksha Mala",
-      price: 899,
-      originalPrice: 1199,
-      image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=400",
-      rating: 4.7,
-      reviews: 156,
-      category: "Jewelry",
-      description: "Authentic Rudraksha Mala with 108 beads, ideal for meditation and chanting.",
-    },
-    {
-      id: 4,
-      name: "Diya Set (Pack of 12)",
-      price: 199,
-      originalPrice: 299,
-      image: "https://images.unsplash.com/photo-1604608672516-f1b2147880a0?w=400",
-      rating: 4.6,
-      reviews: 203,
-      category: "Pooja Items",
-      description: "A set of 12 traditional clay diyas, perfect for Diwali and other festive occasions.",
-    },
-    {
-      id: 5,
-      name: "Brass Puja Thali",
-      price: 499,
-      originalPrice: 599,
-      image: "https://images.unsplash.com/photo-1628189679198-d2e6b1d1e4e7?w=400",
-      rating: 4.5,
-      reviews: 90,
-      category: "Pooja Items",
-      description: "Elegant brass puja thali with intricate designs for your daily rituals.",
-    },
-    {
-      id: 6,
-      name: "Srimad Bhagavatam (English)",
-      price: 799,
-      originalPrice: 999,
-      image: "https://images.unsplash.com/photo-1594904500908-ee9a721c5b8b?w=400",
-      rating: 4.9,
-      reviews: 75,
-      category: "Religious Books",
-      description: "The timeless wisdom of Srimad Bhagavatam translated into English, a spiritual masterpiece.",
-    },
-    {
-      id: 7,
-      name: "Lakshmi Ganesh Idol Set",
-      price: 2499,
-      originalPrice: 2999,
-      image: "https://images.unsplash.com/photo-1562916698-c1e1c3a6e6a1?w=400",
-      rating: 4.8,
-      reviews: 110,
-      category: "Idols & Statues",
-      description: "Exquisite set of Lakshmi and Ganesha idols, symbolizing prosperity and good fortune.",
-    },
-    {
-      id: 8,
-      name: "Incense Sticks (Sandalwood)",
-      price: 149,
-      originalPrice: 180,
-      image: "https://images.unsplash.com/photo-1603994326555-d419d2c6c0b3?w=400",
-      rating: 4.7,
-      reviews: 180,
-      category: "Incense",
-      description: "High-quality sandalwood incense sticks for a calming and spiritual ambiance.",
-    },
-  ];
+
 
   useEffect(() => {
     setLoading(true);
-    const formattedCategory = categoryName
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-      .replace(/ And /g, ' & ');
 
-    const initialProducts =
-      categoryName === "all-products"
-        ? allProducts
-        : allProducts.filter((p) => p.category === formattedCategory);
+    const fetchProducts = async () => {
+      try {
+        console.log(categoryName);
+        const formattedCategory = categoryName
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
 
-    setProducts(initialProducts);
+        let response;
 
-    // Set available categories for current products
-    const categories = [...new Set(initialProducts.map(p => p.category))];
-    setAvailableCategories(categories);
+        if (categoryName === "all-products") {
+          // http://localhost:8080/api/products
+          response = await axios.get("http://localhost:8080/api/products");
+        } else {
+          // http://localhost:8080/api/products/category/Idols & Statues
+          response = await axios.get(
+            `http://localhost:8080/api/products/category/${encodeURIComponent(
+              formattedCategory
+            )}`
+          );
+        }
 
-    // Set price range based on available products
-    if (initialProducts.length > 0) {
-      const prices = initialProducts.map(p => p.price);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      setPriceRange([minPrice, maxPrice]);
-    } else {
-      setPriceRange([0, 3000]); // Default range if no products
-    }
+        const data = response.data;
+        setProducts(data);
 
+        // Set available categories
+        const categories = [...new Set(data.map((p) => p.category))];
+        setAvailableCategories(categories);
 
-    setLoading(false);
+        // Set dynamic price range
+        if (data.length > 0) {
+          const prices = data.map((p) => p.price);
+          const minPrice = Math.min(...prices);
+          const maxPrice = Math.max(...prices);
+          setPriceRange([minPrice, maxPrice]);
+        } else {
+          setPriceRange([0, 3000]);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, [categoryName]);
 
   // Apply filters and sorting
@@ -154,45 +93,53 @@ const ProductPage = () => { // Remove handleAddToCart prop
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      currentFiltered = currentFiltered.filter(product =>
-        product.name.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query)
+      currentFiltered = currentFiltered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)
       );
     }
 
     // Apply price filter
     currentFiltered = currentFiltered.filter(
-      product => product.price >= priceRange[0] && product.price <= priceRange[1]
+      (product) =>
+        product.price >= priceRange[0] && product.price <= priceRange[1]
     );
 
     // Apply rating filter
     if (selectedRating > 0) {
-      currentFiltered = currentFiltered.filter(product => product.rating >= selectedRating);
+      currentFiltered = currentFiltered.filter(
+        (product) => product.rating >= selectedRating
+      );
     }
 
     // Apply sorting
     switch (sortBy) {
-      case 'price-low':
+      case "price-low":
         currentFiltered.sort((a, b) => a.price - b.price);
         break;
-      case 'price-high':
+      case "price-high":
         currentFiltered.sort((a, b) => b.price - a.price);
         break;
-      case 'rating':
+      case "rating":
         currentFiltered.sort((a, b) => b.rating - a.rating);
         break;
-      case 'reviews':
+      case "reviews":
         currentFiltered.sort((a, b) => b.reviews - a.reviews);
         break;
-      case 'discount':
+      case "discount":
         currentFiltered.sort((a, b) => {
-          const discountA = a.originalPrice ? ((a.originalPrice - a.price) / a.originalPrice) * 100 : 0;
-          const discountB = b.originalPrice ? ((b.originalPrice - b.price) / b.originalPrice) * 100 : 0;
+          const discountA = a.originalPrice
+            ? ((a.originalPrice - a.price) / a.originalPrice) * 100
+            : 0;
+          const discountB = b.originalPrice
+            ? ((b.originalPrice - b.price) / b.originalPrice) * 100
+            : 0;
           return discountB - discountA;
         });
         break;
-      case 'relevance':
+      case "relevance":
         // Sort by search relevance if there's a search query
         if (searchQuery.trim()) {
           const query = searchQuery.toLowerCase();
@@ -243,7 +190,7 @@ const ProductPage = () => { // Remove handleAddToCart prop
   const clearFilters = () => {
     // Reset price range to min/max of currently displayed products
     if (products.length > 0) {
-      const prices = products.map(p => p.price);
+      const prices = products.map((p) => p.price);
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
       setPriceRange([minPrice, maxPrice]);
@@ -251,8 +198,8 @@ const ProductPage = () => { // Remove handleAddToCart prop
       setPriceRange([0, 3000]); // Fallback default
     }
     setSelectedRating(0);
-    setSortBy('default');
-    setSearchQuery('');
+    setSortBy("default");
+    setSearchQuery("");
   };
 
   const ProductCard = ({ product }) => {
@@ -269,7 +216,7 @@ const ProductPage = () => { // Remove handleAddToCart prop
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
         <div className="relative overflow-hidden rounded-t-xl">
           <img
-            src={product.image}
+            src={product.imageUrl}
             alt={product.name}
             className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
           />
@@ -332,7 +279,11 @@ const ProductPage = () => { // Remove handleAddToCart prop
   };
 
   const FilterPanel = () => (
-    <div className={`${showFilters ? 'block' : 'hidden'} lg:block bg-white rounded-lg shadow-md p-6 mb-6 lg:mb-0`}>
+    <div
+      className={`${
+        showFilters ? "block" : "hidden"
+      } lg:block bg-white rounded-lg shadow-md p-6 mb-6 lg:mb-0`}
+    >
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
         <button
@@ -355,7 +306,9 @@ const ProductPage = () => { // Remove handleAddToCart prop
             <input
               type="number"
               value={priceRange[0]}
-              onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
+              onChange={(e) =>
+                setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])
+              }
               className="w-20 px-2 py-1 border rounded text-sm"
               placeholder="Min"
             />
@@ -363,7 +316,9 @@ const ProductPage = () => { // Remove handleAddToCart prop
             <input
               type="number"
               value={priceRange[1]}
-              onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 3000])}
+              onChange={(e) =>
+                setPriceRange([priceRange[0], parseInt(e.target.value) || 3000])
+              }
               className="w-20 px-2 py-1 border rounded text-sm"
               placeholder="Max"
             />
@@ -373,7 +328,9 @@ const ProductPage = () => { // Remove handleAddToCart prop
 
       {/* Rating Filter */}
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Minimum Rating</h4>
+        <h4 className="text-sm font-medium text-gray-700 mb-3">
+          Minimum Rating
+        </h4>
         <div className="space-y-2">
           {[4.5, 4.0, 3.5, 3.0].map((rating) => (
             <label key={rating} className="flex items-center">
@@ -413,7 +370,7 @@ const ProductPage = () => { // Remove handleAddToCart prop
         {/* Header */}
         <nav className="flex items-center justify-between mb-8">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="text-orange-600 hover:text-orange-800 flex items-center"
           >
             <svg
@@ -433,7 +390,10 @@ const ProductPage = () => { // Remove handleAddToCart prop
             Back to Homepage
           </button>
           <h1 className="text-3xl font-bold text-gray-900 capitalize">
-            {categoryName.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase()).replace(/ And /g, ' & ')}
+            {categoryName
+              .replace(/-/g, " ")
+              .replace(/\b\w/g, (char) => char.toUpperCase())
+              .replace(/ And /g, " & ")}
           </h1>
         </nav>
 
@@ -452,7 +412,7 @@ const ProductPage = () => { // Remove handleAddToCart prop
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => setSearchQuery("")}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
                 <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
@@ -521,17 +481,18 @@ const ProductPage = () => { // Remove handleAddToCart prop
               ) : (
                 <div className="text-center py-20 text-gray-600">
                   <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-semibold mb-2">No products found</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    No products found
+                  </h3>
                   <p className="text-gray-500 mb-4">
                     {searchQuery
                       ? `No products match "${searchQuery}". Try different keywords or adjust your filters.`
-                      : "Try adjusting your filters or search criteria"
-                    }
+                      : "Try adjusting your filters or search criteria"}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     {searchQuery && (
                       <button
-                        onClick={() => setSearchQuery('')}
+                        onClick={() => setSearchQuery("")}
                         className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
                       >
                         Clear Search

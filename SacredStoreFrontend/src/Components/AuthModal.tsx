@@ -68,9 +68,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         const res=  await AuthService.login(formData.email, formData.password);
         console.log(res);
         dispatch(loginSuccess(res))
-       if(res.roles[0] == "ROLE_ADMIN"){
+       if(res.roles[0].name == "ROLE_ADMIN"){
           navigate("/admin");
-        }else if(res.roles[0] == "ROLE_USER"){ 
+        }else if(res.roles[0].name == "ROLE_USER"){ 
              setMessage("Login successful!");
           onClose()
           setFormData({
@@ -336,8 +336,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
             )}
 
-            {/* Remember Me / Terms */}
-            <div className="flex items-center justify-between text-sm">
+         
+            {/* <div className="flex items-center justify-between text-sm">
               {isLogin ? (
                 <label className="flex items-center">
                   <input
@@ -374,7 +374,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   Forgot password?
                 </a>
               )}
-            </div>
+            </div> */}
 
             {/* Submit Button */}
             <button

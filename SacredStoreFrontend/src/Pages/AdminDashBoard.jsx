@@ -38,7 +38,7 @@ const AdminDashboard = () => {
     monthlyGrowth: 0
   });
 
-  const categories = ['Books', 'Accessories', 'Jewelry', 'Home & Garden', 'Prayer Items', 'Decor', 'Music', 'Gifts'];
+  const categories = ['Books', 'Accessories', 'Jewelry', 'Idols & Statues', 'Prayer Items', 'Decor', 'Music', 'Gifts'];
 
 
   const fetchProducts = async () => {

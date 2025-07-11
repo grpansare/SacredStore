@@ -65,49 +65,49 @@ const Homepage = ({ handleAddToCart }) => {
       category: "Pooja Items",
     },
   ];
-
   const categories = [
     {
       name: "Idols & Statues",
-      icon: "🕉️",
+      image: "/assets/category-idols.png", // Added image
       count: "150+ Items",
       color: "from-orange-400 to-red-500",
+      fetchName: "Idols & Statues", // Added fetchName
     },
     {
       name: "Religious Books",
-      icon: "📚",
+      image: "/assets/category-books.png", // Added image
       count: "200+ Items",
       color: "from-blue-400 to-indigo-500",
+      fetchName: "Books",
     },
     {
       name: "Pooja Items",
-      icon: "🪔",
+      image: "/assets/category-pooja.png", // Added image
       count: "300+ Items",
       color: "from-yellow-400 to-orange-500",
+      fetchName: "Prayer Items",
     },
     {
       name: "Jewelry",
-      icon: "📿",
+      image: "/assets/category-jewelry.png", // Added image
       count: "80+ Items",
       color: "from-purple-400 to-pink-500",
+      fetchName: "Jewelry",
     },
     {
       name: "Home Décor",
-      icon: "🏮",
+      image: "/assets/category-homedecor.png", // Added image
       count: "120+ Items",
       color: "from-green-400 to-blue-500",
+      fetchName: "Decor", // Added fetchName
     },
-    {
-      name: "Incense",
-      icon: "🌸",
-      count: "90+ Items",
-      color: "from-pink-400 to-rose-500",
-    },
+
     {
       name: "Music",
-      count: "40 items", // Example count, adjust as needed
-      icon: "🎵", // A musical note icon
-      color: "from-pink-400 to-pink-600", // A vibrant color for music
+      count: "40 items",
+      image: "/assets/category-music.jpg", // Added image
+      color: "from-pink-400 to-pink-600",
+      fetchName: "Music", // Added fetchName
     },
   ];
 
@@ -227,9 +227,6 @@ const Homepage = ({ handleAddToCart }) => {
     );
   };
 
-  // No conditional rendering for ProductPage here.
-  // It's handled by React Router in App.jsx
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -239,8 +236,7 @@ const Homepage = ({ handleAddToCart }) => {
         <img
           src={heroSlides[currentSlide].image}
           alt="Hero"
-     className="absolute inset-0 w-full h-full object-center z-0"
-
+          className="absolute inset-0 w-full h-full object-center z-0"
         />
 
         <div className="relative z-20 flex items-center justify-center h-full text-center text-white px-4">
@@ -271,45 +267,91 @@ const Homepage = ({ handleAddToCart }) => {
           ))}
         </div>
       </section>
-      {/* Categories Section */}
-      <section className="py-16 px-4 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-            Shop by Category
-          </h2>
-          <p className="text-lg text-gray-600">
-            Discover our wide range of spiritual and religious products
-          </p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group"
-              // Use navigate to go to the product page for this category
-              onClick={() =>
-                navigate(
-                  `/products/${category.name
-                    .toLowerCase()
-                    .replace(/ & /g, "-")
-                    .replace(/ /g, "-")}`
-                )
-              }
-            >
+
+      <section className="py-20 px-4 max-w-7xl mx-auto relative">
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-amber-50/30 rounded-3xl"></div>
+
+        <div className="relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6">
+              Shop by Category
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              Discover our curated collection of spiritual and religious
+              products designed to enhance your journey
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+            {categories.map((category, index) => (
               <div
-                className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform`}
+                key={index}
+                className="group relative h-52 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 cursor-pointer"
+                onClick={() =>
+                  navigate(
+                    `/products/${category.fetchName
+                      }`
+                  )
+                }
+                  
               >
-                {category.icon}
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                  style={{
+                    backgroundImage: `url(${category.image})`,
+                  }}
+                ></div>
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent group-hover:from-black/80 group-hover:via-black/50 transition-all duration-500"></div>
+
+                <div className="relative z-10 h-full flex flex-col justify-end p-6 text-white">
+                  <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
+                    <h3 className="font-bold text-lg mb-2 group-hover:text-white transition-colors duration-300">
+                      {category.name}
+                    </h3>
+
+                    <p className="text-sm text-gray-200 group-hover:text-white transition-colors duration-300 font-medium">
+                      {category.count}
+                    </p>
+
+                    {/* Animated underline */}
+                    <div className="w-0 h-0.5 bg-gradient-to-r from-purple-400 to-blue-400 group-hover:w-full transition-all duration-500 mt-2"></div>
+                  </div>
+                </div>
+
+                {/* Hover arrow indicator */}
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </div>
+
+                {/* Decorative corner elements */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                  <div className="absolute top-2 left-2 w-3 h-3 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-100 scale-0"></div>
+                  <div className="absolute bottom-2 right-2 w-2 h-2 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 transform group-hover:scale-100 scale-0"></div>
+                </div>
               </div>
-              <h3 className="font-semibold text-gray-800 mb-2">
-                {category.name}
-              </h3>
-              <p className="text-sm text-gray-600">{category.count}</p>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* Bottom decorative line */}
+          <div className="mt-16 flex justify-center">
+            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-amber-500 rounded-full"></div>
+          </div>
         </div>
       </section>
-
       {/* Featured Products */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-12">

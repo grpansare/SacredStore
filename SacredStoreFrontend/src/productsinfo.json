@@ -1,0 +1,185 @@
+// ------------------books--------------------
+{
+  "name": "Bhagavad Gita - Hindi",
+  "category": "Books",
+  "price": 149.99,
+  "originalPrice": 199.99,
+  "stock": 50,
+  "imageUrl": "/images/products/gita-hindi.jpg",
+  "description": "A beautifully translated version of the Bhagavad Gita in Hindi with commentary.",
+  "rating": 4.8
+}
+{
+  "name": "Ramayana – Valmiki Edition (English)",
+  "category": "Books",
+  "price": 249.0,
+  "originalPrice": 299.0,
+  "stock": 35,
+  "imageUrl": "/images/products/ramayana-english.jpg",
+  "description": "An English translation of the epic Ramayana by Valmiki, with vivid illustrations and simplified language.",
+  "rating": 4.8
+}
+{
+  "name": "Hanuman Chalisa Pocket Edition",
+  "category": "Books",
+  "price": 59.0,
+  "originalPrice": 79.0,
+  "stock": 120,
+  "imageUrl": "/images/products/hanuman-chalisa-pocket.jpg",
+  "description": "A compact and durable pocket edition of Hanuman Chalisa with Hindi and English translations.",
+  "rating": 4.9
+}
+
+
+
+
+// prayer items
+
+[
+  {
+    "name": "Brass Puja Thali Set",
+    "category": "Prayer Items",
+    "price": 799.0,
+    "originalPrice": 999.0,
+    "stock": 20,
+    "imageUrl": "/images/products/puja-thali-set.jpg",
+    "description": "Complete brass puja thali set with diya, incense holder, bell, and small containers for kumkum and haldi.",
+    "rating": 4.7
+  },
+  {
+    "name": "Camphor Tablets (100g)",
+    "category": "Prayer Items",
+    "price": 89.0,
+    "originalPrice": 120.0,
+    "stock": 100,
+    "imageUrl": "/images/products/camphor-tablets.jpg",
+    "description": "Pure camphor tablets used for aarti and purification rituals.",
+    "rating": 4.5
+  },
+  {
+    "name": "Agarbatti (Sandalwood, 120 sticks)",
+    "category": "Prayer Items",
+    "price": 149.0,
+    "originalPrice": 199.0,
+    "stock": 75,
+    "imageUrl": "/images/products/sandalwood-agarbatti.jpg",
+    "description": "Premium sandalwood agarbatti for a calming and divine fragrance during prayers.",
+    "rating": 4.6
+  },
+  {
+    "name": "Copper Kalash (1L)",
+    "category": "Prayer Items",
+    "price": 299.0,
+    "originalPrice": 349.0,
+    "stock": 30,
+    "imageUrl": "/images/products/copper-kalash.jpg",
+    "description": "Traditional copper Kalash for puja rituals and Navratri celebrations.",
+    "rating": 4.4
+  },
+  {
+    "name": "Cotton Wicks for Diyas (200 pcs)",
+    "category": "Prayer Items",
+    "price": 59.0,
+    "originalPrice": 79.0,
+    "stock": 150,
+    "imageUrl": "/images/products/cotton-wicks.jpg",
+    "description": "High-quality cotton wicks suitable for oil lamps during daily puja and festivals.",
+    "rating": 4.6
+  }
+]
+
+
+//idols and statues
+{
+  "name": "Lord Shiva Idol with Trishul (Resin)",
+  "category": "Idols",
+  "price": 649.0,
+  "originalPrice": 899.0,
+  "stock": 18,
+  "imageUrl": "/images/products/shiva-idol-trishul.jpg",
+  "description": "Graceful resin idol of Lord Shiva seated in meditation, holding Trishul and Damaru.",
+  "rating": 4.8
+}
+{
+  "name": "Radha Krishna Statue (Metallic Finish)",
+  "category": "Idols",
+  "price": 1099.0,
+  "originalPrice": 1399.0,
+  "stock": 15,
+  "imageUrl": "/images/products/radha-krishna-metal.jpg",
+  "description": "Elegant metallic-finished Radha Krishna statue symbolizing love and devotion.",
+  "rating": 4.9
+}
+{
+  "name": "Ganesha Idol with Lotus (Brass)",
+  "category": "Idols",
+  "price": 899.0,
+  "originalPrice": 1199.0,
+  "stock": 25,
+  "imageUrl": "/images/products/ganesha-idol-lotus.jpg",
+  "description": "Beautiful brass idol of Lord Ganesha seated on a lotus, perfect for home decor.",
+  "rating": 4.7
+}
+{
+  "name": "Durga Maa Idol with Lion (Polyresin)",
+  "category": "Idols",
+  "price": 1299.0,
+  "originalPrice": 1599.0,
+  "stock": 12,
+  "imageUrl": "/images/products/durga-maa-idol.jpg",
+  "description": "Majestic polyresin idol of Goddess Durga riding a lion, ideal for Navratri celebrations.",
+  "rating": 4.8
+}
+{
+  "name": "Buddha Statue in Meditation Pose (Stone Finish)",
+  "category": "Idols",
+  "price": 749.0,
+  "originalPrice": 999.0,
+  "stock": 20,
+  "imageUrl": "/images/products/buddha-statue.jpg",
+  "description": "Serene stone-finished Buddha statue in meditation pose, perfect for spiritual ambiance.",
+  "rating": 4.9
+}
+
+
+//jwellery
+{
+  "name": "Rudraksha Mala",
+  "category": "Jewelry",
+  "price": 299.0,
+  "originalPrice": 399.0,
+  "stock": 100,
+  "imageUrl": "/images/products/rudraksha-mala.jpg",
+  "description": "108-bead Rudraksha mala suitable for meditation and spiritual practice.",
+  "rating": 4.6
+}
+{
+  "name": "Silver Om Pendant",
+  "category": "Jewelry",
+  "price": 499.0,
+  "originalPrice": 699.0,
+  "stock": 50,
+  "imageUrl": "/images/products/silver-om-pendant.jpg",
+  "description": "Elegant silver pendant with Om symbol, perfect for daily wear.",
+  "rating": 4.7
+}
+{
+  "name": "Brass Nataraja Statue",
+  "category": "Jewelry",
+  "price": 899.0,
+  "originalPrice": 1199.0,
+  "stock": 30,
+  "imageUrl": "/images/products/nataraja-statue.jpg",
+  "description": "Intricate brass statue of Lord Nataraja, ideal for home decor.",
+  "rating": 4.8
+}
+{
+  "name": "Ganesha Stud Earrings",
+  "category": "Jewelry",
+  "price": 199.0,
+  "originalPrice": 299.0,
+  "stock": 150,
+  "imageUrl": "/images/products/ganesha-earrings.jpg",
+  "description": "Cute Ganesha stud earrings made of high-quality metal.",
+  "rating": 4.5
+}

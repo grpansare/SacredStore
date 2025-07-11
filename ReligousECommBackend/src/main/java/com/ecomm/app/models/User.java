@@ -38,6 +38,12 @@ public class User implements UserDetails  {
 
     private String phone; // Optional
     private String address; // Optional
+    
+    
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Cart cart;
+    
+    
     public User() {}
 
     public User(String email, String password) {
@@ -51,8 +57,18 @@ public class User implements UserDetails  {
     }
     
     
+    
+    
 
-    public String getFullname() {
+    public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+
+	public String getFullname() {
 		return fullname;
 	}
 
