@@ -1,5 +1,7 @@
 package com.ecomm.app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +17,7 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private Cart cart;
 
     @ManyToOne

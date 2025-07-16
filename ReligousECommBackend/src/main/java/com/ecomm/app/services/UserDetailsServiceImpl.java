@@ -5,6 +5,7 @@ package com.ecomm.app.services;
 
 import java.util.Optional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,7 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         existingUser.setFullname(updatedUser.getFullname());
         existingUser.setPhone(updatedUser.getPhone());
-        existingUser.setAddress(updatedUser.getAddress());
+//        existingUser.setAddress(updatedUser.getAddress());
 
         return userRepository.save(existingUser);
     }

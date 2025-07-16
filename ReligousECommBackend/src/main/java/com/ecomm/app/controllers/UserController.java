@@ -56,7 +56,7 @@ public class UserController {
         User userToUpdate = new User();
         userToUpdate.setFullname(userDto.getFullname());
         userToUpdate.setPhone(userDto.getPhone());
-        userToUpdate.setAddress(userDto.getAddress());
+      
         // Do NOT set ID or sensitive fields like password here directly from DTO
 
         User updatedUser = userService.updateUserProfile(userDetails.getId(), userToUpdate); // Use ID from principal

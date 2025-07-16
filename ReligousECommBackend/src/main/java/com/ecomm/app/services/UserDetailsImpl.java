@@ -3,7 +3,9 @@ package com.ecomm.app.services;
 
 
 
+import com.ecomm.app.models.Address;
 import com.ecomm.app.models.User;
+import com.ecomm.app.models.UserAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +28,7 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private String fullname; // Include necessary fields from your User entity
     private String phone;
-    private String address;
+    private List<UserAddress> address;
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -44,7 +46,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getPassword(),
                 user.getFullname(),
                 user.getPhone(),
-                user.getAddress(),
+                user.getAddresses(),
                 authorities);
     }
 

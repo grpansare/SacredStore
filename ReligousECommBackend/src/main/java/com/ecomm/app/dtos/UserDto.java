@@ -3,11 +3,14 @@ package com.ecomm.app.dtos;
 
 
 import lombok.Data;
+
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.ecomm.app.models.UserAddress;
 import com.ecomm.app.models.User;
 
 @Data
@@ -18,7 +21,7 @@ public class UserDto {
     private String email;
     private String fullname;
     private String phone;
-    private String address;
+    private List<UserAddress> address;
     
 
     // Static method to convert User entity to UserDto
@@ -31,7 +34,7 @@ public class UserDto {
             user.getEmail(),
             user.getFullname(),
             user.getPhone(),
-            user.getAddress()
+            user.getAddresses()
         
         );
     }

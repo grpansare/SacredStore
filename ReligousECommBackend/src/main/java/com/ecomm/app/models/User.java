@@ -3,17 +3,25 @@ package com.ecomm.app.models;
 
 
 import java.util.Collection;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 @Entity
 @Table(name = "users")
+@Data
 public class User implements UserDetails  {
 
     @Id
@@ -22,6 +30,7 @@ public class User implements UserDetails  {
 
     
     private String fullname;
+    
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -37,12 +46,16 @@ public class User implements UserDetails  {
     private Set<Role> roles = new HashSet<>();
 
     private String phone; // Optional
-    private String address; // Optional
+ 
     
     
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
+    @JsonManagedReference
     private Cart cart;
     
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAddress> addresses;
     
     public User() {}
 
@@ -52,77 +65,7 @@ public class User implements UserDetails  {
     }
 
  
-    public Long getId() {
-        return id;
-    }
     
-    
-    
-    
-
-    public Cart getCart() {
-		return cart;
-	}
-
-	public void setCart(Cart cart) {
-		this.cart = cart;
-	}
-
-	public String getFullname() {
-		return fullname;
-	}
-
-    
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
-	}
-
-	public void setId(Long id) {
-        this.id = id;
-    }
-
- 
-
-    public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // For simplicity, let's assume all users have a "ROLE_USER"
