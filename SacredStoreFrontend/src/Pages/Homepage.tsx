@@ -274,7 +274,7 @@ const Homepage = ({ handleAddToCart }) => {
 
         <div className="relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Shop by Category
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
@@ -288,13 +288,7 @@ const Homepage = ({ handleAddToCart }) => {
               <div
                 key={index}
                 className="group relative h-52 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 cursor-pointer"
-                onClick={() =>
-                  navigate(
-                    `/products/${category.fetchName
-                      }`
-                  )
-                }
-                  
+                onClick={() => navigate(`/products/${category.fetchName}`)}
               >
                 <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"

@@ -16,21 +16,29 @@ import {
   Cross,
 } from 'lucide-react';
 
+import { logout } from "../store/userSlice";  
+import Swal from 'sweetalert2';
+
 
 import { ProductForm } from '../Components/ProductForm';
 import ProductGrid from '../Components/ProductsGrid'; 
+import { useDispatch, useSelector } from 'react-redux';
 
 const API_BASE_URL = 'http://localhost:8080/api/products';
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('products');
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All Categories');
   const [recentOrders, setRecentOrders] = useState([]);
+  // const {logout}=useSelector((state) => state.user);
+  const dispatch=useDispatch();
   const [dashboardStats, setDashboardStats] = useState({
+
+    
     totalRevenue: 0,
     totalOrders: 0,
     totalProducts: 0,
@@ -100,61 +108,169 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleSaveProduct = async (productData) => {
+
+
+const handleSaveProduct = async (productData) => {
+  try {
+    // Show loading alert
+    Swal.fire({
+      title: 'Saving Product...',
+      text: 'Please wait while we save your product',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Convert price and originalPrice to numbers if they are strings
+    const dataToSave = {
+      ...productData,
+      price: parseFloat(productData.price),
+      originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : null, // Handle optional originalPrice
+      stock: parseInt(productData.stock, 10),
+      rating: parseFloat(productData.rating)
+    };
+
+    if (dataToSave.id) {
+      await axios.put(`${API_BASE_URL}/${dataToSave.id}`, dataToSave);
+      console.log("Product updated successfully:", dataToSave);
+      
+      // Success alert for update
+      Swal.fire({
+        icon: 'success',
+        title: 'Product Updated!',
+        text: 'Your product has been successfully updated.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    } else {
+      await axios.post(API_BASE_URL, dataToSave);
+      console.log("Product added successfully:", dataToSave);
+      
+      // Success alert for new product
+      Swal.fire({
+        icon: 'success',
+        title: 'Product Added!',
+        text: 'Your new product has been successfully added.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+    
+    setShowAddProduct(false);
+    setSelectedProduct(null);
+    fetchProducts();
+    
+  } catch (error) {
+    console.error("Error saving product:", error);
+    
+    // More detailed error logging and SweetAlert error handling
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error("Error data:", error.response.data);
+      console.error("Error status:", error.response.status);
+      console.error("Error headers:", error.response.headers);
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Save Failed',
+        text: error.response.data.message || error.response.statusText,
+        confirmButtonText: 'Try Again',
+        confirmButtonColor: '#ef4444'
+      });
+      
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error("Error request:", error.request);
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Network Error',
+        text: 'No response from server. Please check your network connection.',
+        confirmButtonText: 'Retry',
+        confirmButtonColor: '#ef4444'
+      });
+      
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error("Error message:", error.message);
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Unexpected Error',
+        text: `An unexpected error occurred: ${error.message}`,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#ef4444'
+      });
+    }
+  }
+};
+
+// Optional: Add confirmation before saving (especially useful for updates)
+const handleSaveProductWithConfirmation = async (productData) => {
+  const isUpdate = !!productData.id;
+  
+  const result = await Swal.fire({
+    title: isUpdate ? 'Update Product?' : 'Add New Product?',
+    text: isUpdate ? 'Are you sure you want to update this product?' : 'Are you sure you want to add this product?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3b82f6',
+    cancelButtonColor: '#6b7280',
+    confirmButtonText: isUpdate ? 'Yes, Update' : 'Yes, Add',
+    cancelButtonText: 'Cancel'
+  });
+
+  if (result.isConfirmed) {
+    await handleSaveProduct(productData);
+  }
+};
+
+
+
+const handleDeleteProduct = async (productId) => {
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  });
+
+  if (result.isConfirmed) {
     try {
-      // Convert price and originalPrice to numbers if they are strings
-      const dataToSave = {
-        ...productData,
-        price: parseFloat(productData.price),
-        originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : null, // Handle optional originalPrice
-        stock: parseInt(productData.stock, 10),
-        rating: parseFloat(productData.rating)
-      };
-
-      if (dataToSave.id) {
-        await axios.put(`${API_BASE_URL}/${dataToSave.id}`, dataToSave);
-        console.log("Product updated successfully:", dataToSave);
-      } else {
-        await axios.post(API_BASE_URL, dataToSave);
-        console.log("Product added successfully:", dataToSave);
-      }
-      setShowAddProduct(false);
-      setSelectedProduct(null);
+      await axios.delete(`${API_BASE_URL}/${productId}`);
+      console.log("Product deleted successfully:", productId);
       fetchProducts();
+
+      // Toast notification
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Product deleted successfully',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+      });
     } catch (error) {
-      console.error("Error saving product:", error);
-      // More detailed error logging:
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error("Error data:", error.response.data);
-        console.error("Error status:", error.response.status);
-        console.error("Error headers:", error.response.headers);
-        alert(`Error saving product: ${error.response.data.message || error.response.statusText}`);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("Error request:", error.request);
-        alert("No response from server. Check network connection.");
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error("Error message:", error.message);
-        alert(`An unexpected error occurred: ${error.message}`);
-      }
+      console.error("Error deleting product:", error);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Failed to delete product',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+      });
     }
-  };
+  }
+};
 
-
-  const handleDeleteProduct = async (productId) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      try {
-        await axios.delete(`${API_BASE_URL}/${productId}`);
-        console.log("Product deleted successfully:", productId);
-        fetchProducts();
-      } catch (error) {
-        console.error("Error deleting product:", error);
-      }
-    }
-  };
 
   useEffect(() => {
     if (activeTab === 'dashboard') {
@@ -402,8 +518,30 @@ const AdminDashboard = () => {
     { id: 'products', label: 'Products', icon: Package },
     { id: 'orders', label: 'Orders', icon: ShoppingCart },
     { id: 'customers', label: 'Customers', icon: Users },
+    
   ];
+  
+  const handleLogout = () => {
+    Swal.fire({ 
+      title: 'Are you sure you want to logout?',
+      text: "You will be redirected to the login page.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, logout'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
 
+        dispatch(logout()); // Dispatch logout action to Redux store
+        window.location.href = '/'; // Redirect to login page
+      }
+    }); 
+
+
+  }
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -430,6 +568,19 @@ const AdminDashboard = () => {
               <span>{item.label}</span>
             </button>
           ))}
+
+           <button
+            
+              onClick={() => handleLogout()}
+              className={`w-full flex items-center space-x-3 px-6 py-3 text-left hover:bg-blue-50 transition-colors
+                `}
+            >
+            <Cross className="w-5 h-5" />
+            <span className="text-red-600">Logout</span>
+           
+            </button>
+
+
         </nav>
       </div>
 

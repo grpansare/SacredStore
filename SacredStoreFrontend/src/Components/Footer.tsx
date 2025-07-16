@@ -17,7 +17,7 @@ const Footer = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold">🕉</span>
               </div>
-              <h3 className="text-xl font-bold">Divine Store</h3>
+              <h3 className="text-xl font-bold">Sacred Store</h3>
             </div>
             <p className="text-gray-400">
               Your trusted partner for authentic religious and spiritual

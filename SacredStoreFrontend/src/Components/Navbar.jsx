@@ -108,7 +108,7 @@ const Navbar = ({ setSelectedCategory }) => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-red-800">
-                  Divine Store
+                  Sacred Store
                 </h1>
                 <p className="text-xs text-gray-600">Sacred & Spiritual</p>
               </div>

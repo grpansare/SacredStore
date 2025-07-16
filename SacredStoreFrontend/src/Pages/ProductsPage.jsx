@@ -1,5 +1,5 @@
 // src/ProductsPage.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Star,
   ShoppingCart,
@@ -10,11 +10,15 @@ import {
   Search,
 } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext"; // Import the useCart hook
+import { useCart } from "../context/CartContext";
 import axios from "axios";
+import Swal from "sweetalert2";
+import ProductCard from "../Components/ProductCard"; // Adjust path if needed
+
+// Import the new FilterPanel component
+import FilterPanel from "../components/FilterPanel"; // Adjust path if needed
 
 const ProductPage = () => {
- 
   const { categoryName } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -27,12 +31,9 @@ const ProductPage = () => {
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [selectedRating, setSelectedRating] = useState(0);
   const [sortBy, setSortBy] = useState("default");
-  const [availableCategories, setAvailableCategories] = useState([]);
-
+  // const [availableCategories, setAvailableCategories] = useState([]); // This state is not directly used for filtering UI now
 
   const { addToCart } = useCart();
-
-
 
   useEffect(() => {
     setLoading(true);
@@ -48,10 +49,8 @@ const ProductPage = () => {
         let response;
 
         if (categoryName === "all-products") {
-          // http://localhost:8080/api/products
           response = await axios.get("http://localhost:8080/api/products");
         } else {
-          // http://localhost:8080/api/products/category/Idols & Statues
           response = await axios.get(
             `http://localhost:8080/api/products/category/${encodeURIComponent(
               formattedCategory
@@ -62,16 +61,12 @@ const ProductPage = () => {
         const data = response.data;
         setProducts(data);
 
-        // Set available categories
-        const categories = [...new Set(data.map((p) => p.category))];
-        setAvailableCategories(categories);
-
-        // Set dynamic price range
+        // Set dynamic price range based on fetched products
         if (data.length > 0) {
           const prices = data.map((p) => p.price);
           const minPrice = Math.min(...prices);
           const maxPrice = Math.max(...prices);
-          setPriceRange([minPrice, maxPrice]);
+          setPriceRange([minPrice, maxPrice]); // Initialize priceRange here
         } else {
           setPriceRange([0, 3000]);
         }
@@ -86,7 +81,29 @@ const ProductPage = () => {
     fetchProducts();
   }, [categoryName]);
 
-  // Apply filters and sorting
+  // Function to calculate search relevance score (stays here)
+  const getRelevanceScore = useCallback((product, query) => {
+    let score = 0;
+    const name = product.name.toLowerCase();
+    const description = product.description.toLowerCase();
+    const category = product.category.toLowerCase();
+
+    if (name.includes(query)) {
+      score += name.indexOf(query) === 0 ? 100 : 50;
+    }
+    if (category.includes(query)) {
+      score += 25;
+    }
+    if (description.includes(query)) {
+      score += 10;
+    }
+
+    score += product.rating * 2;
+    score += Math.min(product.reviews / 10, 10);
+    return score;
+  }, []); // No dependencies for this function itself
+
+  // Apply filters and sorting (stays here, depends on all filter states)
   useEffect(() => {
     let currentFiltered = [...products];
 
@@ -140,7 +157,6 @@ const ProductPage = () => {
         });
         break;
       case "relevance":
-        // Sort by search relevance if there's a search query
         if (searchQuery.trim()) {
           const query = searchQuery.toLowerCase();
           currentFiltered.sort((a, b) => {
@@ -151,44 +167,18 @@ const ProductPage = () => {
         }
         break;
       default:
-        // Keep original order or a stable default if no search query
         break;
     }
 
     setFilteredProducts(currentFiltered);
-  }, [products, searchQuery, priceRange, selectedRating, sortBy]); // products dependency added
+  }, [products, searchQuery, priceRange, selectedRating, sortBy, getRelevanceScore]); // Added getRelevanceScore to dependencies
 
-  // Function to calculate search relevance score
-  const getRelevanceScore = (product, query) => {
-    let score = 0;
-    const name = product.name.toLowerCase();
-    const description = product.description.toLowerCase();
-    const category = product.category.toLowerCase();
-
-    // Exact match in name gets highest score
-    if (name.includes(query)) {
-      score += name.indexOf(query) === 0 ? 100 : 50; // Higher if starts with query
-    }
-
-    // Match in category gets medium score
-    if (category.includes(query)) {
-      score += 25;
-    }
-
-    // Match in description gets lower score
-    if (description.includes(query)) {
-      score += 10;
-    }
-
-    // Boost popular items
-    score += product.rating * 2;
-    score += Math.min(product.reviews / 10, 10); // Cap review boost
-
-    return score;
-  };
-
-  const clearFilters = () => {
-    // Reset price range to min/max of currently displayed products
+  // Clear All Filters function for the ProductPage
+  const clearAllFilters = useCallback(() => {
+    setSearchQuery("");
+    setSelectedRating(0);
+    setSortBy("default");
+    // Reset price range based on original products
     if (products.length > 0) {
       const prices = products.map((p) => p.price);
       const minPrice = Math.min(...prices);
@@ -197,172 +187,8 @@ const ProductPage = () => {
     } else {
       setPriceRange([0, 3000]); // Fallback default
     }
-    setSelectedRating(0);
-    setSortBy("default");
-    setSearchQuery("");
-  };
+  }, [products]); // `products` is a dependency here
 
-  const ProductCard = ({ product }) => {
-    const [addedToCartFeedback, setAddedToCartFeedback] = useState(false);
-
-    const handleAddToCartClick = (e) => {
-      e.stopPropagation();
-      addToCart({ ...product, quantity: 1 }); // Use addToCart from context
-      setAddedToCartFeedback(true);
-      setTimeout(() => setAddedToCartFeedback(false), 1000);
-    };
-
-    return (
-      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
-        <div className="relative overflow-hidden rounded-t-xl">
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
-          />
-          <div className="absolute top-3 right-3">
-            <button className="bg-white/90 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-colors shadow-md">
-              <Heart className="w-4 h-4 text-gray-600 hover:text-red-500" />
-            </button>
-          </div>
-          {product.originalPrice > product.price && (
-            <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-medium">
-              {Math.round(
-                ((product.originalPrice - product.price) /
-                  product.originalPrice) *
-                  100
-              )}
-              % OFF
-            </div>
-          )}
-        </div>
-        <div className="p-5">
-          <div className="text-sm text-orange-600 font-medium mb-1">
-            {product.category}
-          </div>
-          <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">
-            {product.name}
-          </h3>
-          <div className="flex items-center gap-1 mb-3">
-            <Star className="w-4 h-4 text-yellow-400 fill-current" />
-            <span className="text-sm font-medium text-gray-700">
-              {product.rating}
-            </span>
-            <span className="text-sm text-gray-500">({product.reviews})</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-gray-900">
-                ₹{product.price}
-              </span>
-              {product.originalPrice > product.price && (
-                <span className="text-sm text-gray-500 line-through">
-                  ₹{product.originalPrice}
-                </span>
-              )}
-            </div>
-            <button
-              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors relative"
-              onClick={handleAddToCartClick}
-            >
-              Add to Cart
-              {addedToCartFeedback && (
-                <span className="absolute top-0 right-0 -mt-2 -mr-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                  +1
-                </span>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const FilterPanel = () => (
-    <div
-      className={`${
-        showFilters ? "block" : "hidden"
-      } lg:block bg-white rounded-lg shadow-md p-6 mb-6 lg:mb-0`}
-    >
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
-        <button
-          onClick={clearFilters}
-          className="text-sm text-orange-600 hover:text-orange-800 font-medium"
-        >
-          Clear All
-        </button>
-      </div>
-
-      {/* Price Range Filter */}
-      <div className="mb-6">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Price Range</h4>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-sm text-gray-600">
-            <span>₹{priceRange[0]}</span>
-            <span>₹{priceRange[1]}</span>
-          </div>
-          <div className="flex gap-2">
-            <input
-              type="number"
-              value={priceRange[0]}
-              onChange={(e) =>
-                setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])
-              }
-              className="w-20 px-2 py-1 border rounded text-sm"
-              placeholder="Min"
-            />
-            <span className="text-gray-400">-</span>
-            <input
-              type="number"
-              value={priceRange[1]}
-              onChange={(e) =>
-                setPriceRange([priceRange[0], parseInt(e.target.value) || 3000])
-              }
-              className="w-20 px-2 py-1 border rounded text-sm"
-              placeholder="Max"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Rating Filter */}
-      <div className="mb-6">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">
-          Minimum Rating
-        </h4>
-        <div className="space-y-2">
-          {[4.5, 4.0, 3.5, 3.0].map((rating) => (
-            <label key={rating} className="flex items-center">
-              <input
-                type="radio"
-                name="rating"
-                value={rating}
-                checked={selectedRating === rating}
-                onChange={(e) => setSelectedRating(parseFloat(e.target.value))}
-                className="mr-2"
-              />
-              <div className="flex items-center">
-                <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                <span className="text-sm text-gray-700">{rating} & above</span>
-              </div>
-            </label>
-          ))}
-          <label className="flex items-center">
-            <input
-              type="radio"
-              name="rating"
-              value={0}
-              checked={selectedRating === 0}
-              onChange={(e) => setSelectedRating(0)}
-              className="mr-2"
-            />
-            <span className="text-sm text-gray-700">All Ratings</span>
-          </label>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -435,6 +261,7 @@ const ProductPage = () => {
           >
             <Filter className="w-4 h-4" />
             Filters
+            {showFilters ? <X className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
 
           {/* Sort dropdown */}
@@ -465,9 +292,23 @@ const ProductPage = () => {
           <div className="text-center py-10">Loading products...</div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Filter Panel */}
+            {/* Filter Panel - Now a separate component */}
             <div className="lg:w-64 flex-shrink-0">
-              <FilterPanel />
+              <FilterPanel
+                showFilters={showFilters}
+                setShowFilters={setShowFilters}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+                selectedRating={selectedRating}
+                setSelectedRating={setSelectedRating}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                products={products} // Pass products to enable clearAllFilters to reset price range
+                clearAllFilters={clearAllFilters} // Pass the clear function
+                isSearchActive={searchQuery.trim().length > 0} // Pass search active state
+              />
             </div>
 
             {/* Products Grid */}
@@ -499,7 +340,7 @@ const ProductPage = () => {
                       </button>
                     )}
                     <button
-                      onClick={clearFilters}
+                      onClick={clearAllFilters} // Use the clearAllFilters function from ProductPage
                       className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
                     >
                       Clear All Filters
@@ -511,6 +352,28 @@ const ProductPage = () => {
           </div>
         )}
       </div>
+
+      {/* Custom SweetAlert2 Styles */}
+      <style jsx global>{`
+        .swal2-toast-custom {
+          background: #10b981 !important;
+          color: white !important;
+        }
+
+        .swal2-toast-title {
+          color: white !important;
+          font-weight: 600 !important;
+        }
+
+        .swal2-toast-icon {
+          border-color: white !important;
+          color: white !important;
+        }
+
+        .swal2-timer-progress-bar {
+          background: rgba(255, 255, 255, 0.6) !important;
+        }
+      `}</style>
     </div>
   );
 };

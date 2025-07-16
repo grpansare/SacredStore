@@ -9,6 +9,9 @@ import CartPage from './Pages/CartPage';
 import AdminDashboard from './Pages/AdminDashboard';
 import AboutUs from './Pages/AboutUs';
   import ProfilePage from './Pages/ProfilePage';
+import CheckoutPage from './Pages/CheckOutPage';
+import ReligiousOrdersPage from './Pages/MyOrders';
+
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -41,6 +44,9 @@ const App = () => {
           <Route path="cart" element={<CartPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="aboutus" element={<AboutUs />} />
+          <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="my-orders" element={<ReligiousOrdersPage />} />
+          {/* <Route path="order-confirmation" element={<OrderSuccessPagege />} /> */}
           {/* <Route path="*" element={<NotFoundPage />} /> */}
         </Route>
       </Routes>

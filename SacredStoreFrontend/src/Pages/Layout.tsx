@@ -1,10 +1,10 @@
 // src/Components/layout/PublicLayout.jsx
 // Create this file inside a new 'layout' folder within your 'Components' directory
-import React from 'react';
-import Navbar from '../Components/Navbar'; // Adjust path if necessary
-import Footer from '../Components/Footer'; // Adjust path if necessary
-import { CartProvider } from '../context/CartContext'; // Adjust path if necessary
-import { Outlet } from 'react-router-dom';
+import React from "react";
+import Navbar from "../Components/Navbar"; // Adjust path if necessary
+import Footer from "../Components/Footer"; // Adjust path if necessary
+import { CartProvider } from "../context/CartContext"; // Adjust path if necessary
+import { Outlet } from "react-router-dom";
 
 interface PublicLayoutProps {
   children: React.ReactNode;
@@ -13,13 +13,15 @@ interface PublicLayoutProps {
 
 const PublicLayout: React.FC<PublicLayoutProps> = ({ children, cartItems }) => {
   return (
-    <CartProvider>
+    <>
       <Navbar cartItems={cartItems} />
-      <main className="min-h-screen"> {/* Add min-h-screen for sticky footer */}
-        <Outlet/>
+      <main className="min-h-screen">
+        {" "}
+        {/* Add min-h-screen for sticky footer */}
+        <Outlet />
       </main>
       <Footer />
-    </CartProvider>
+    </>
   );
 };
 

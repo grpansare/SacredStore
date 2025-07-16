@@ -84,11 +84,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           setMessage("");
           setIsLogin(true);
           // window.location.reload();
-        navigate("/");
+            const redirectPath = localStorage.getItem("redirectAfterLogin") || "/";
+  localStorage.removeItem("redirectAfterLogin");
+  navigate(redirectPath);
+        
         }        
      
-       
-        // window.location.reload();
+      
       } else {
         // --- Register Logic ---
         if (formData.password !== formData.confirmPassword) {
@@ -193,10 +195,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           {/* Logo Section */}
           <div className="text-center mb-6 relative z-10">
             <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-full mb-3 shadow-lg">
-              <Heart className="text-white" size={24} />
+             🕉
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-              Divine Store
+              Sacred Store
             </h1>
             <p className="text-gray-600 text-sm mt-1">
               {isLogin
