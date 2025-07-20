@@ -19,7 +19,7 @@ import com.razorpay.Order;
 
 @RestController
 @RequestMapping("/api/razorpay")
-@CrossOrigin(origins = "http://localhost:7173") // Allow requests from your React frontend
+
 public class PaymentController {
 
  @Autowired
