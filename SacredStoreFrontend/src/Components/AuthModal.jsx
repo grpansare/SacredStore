@@ -80,11 +80,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           setLoading(false);
           return;
         }
-        if (!formData.agreeToTerms) {
-          setMessage("Error: You must agree to the terms and privacy policy!");
-          setLoading(false);
-          return;
-        }
+       
 
         await AuthService.register(
           formData.firstName + " " + formData.lastName,
