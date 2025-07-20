@@ -15,26 +15,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../store/UserSlice";
 
-interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  agreeToTerms: boolean;
-}
-// --- End Type Definitions ---
-
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
+const AuthModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -48,7 +33,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -56,7 +41,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setLoading(true);
@@ -67,9 +52,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         const res = await AuthService.login(formData.email, formData.password);
         console.log(res);
         dispatch(loginSuccess(res));
-        if (res.roles[0].name == "ROLE_ADMIN") {
+        if (res.roles[0].name === "ROLE_ADMIN") {
           navigate("/admin");
-        } else if (res.roles[0].name == "ROLE_USER") {
+        } else if (res.roles[0].name === "ROLE_USER") {
           setMessage("Login successful!");
           onClose();
           setFormData({
@@ -109,7 +94,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         setMessage("Registration successful! Please sign in.");
         setIsLogin(true); // Switch to login mode after successful registration
       }
-    } catch (error: any) {
+    } catch (error) {
       const resMessage =
         (error.response &&
           error.response.data &&
@@ -136,7 +121,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setMessage("");
   };
 
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -334,6 +319,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
             )}
 
+            {/* Terms and conditions / Forgot password (commented out in original) */}
             {/* <div className="flex items-center justify-between text-sm">
               {isLogin ? (
                 <label className="flex items-center">

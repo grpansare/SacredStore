@@ -6,49 +6,23 @@ import { useCart } from "../context/CartContext";
 import axios from "axios";
 import OrderSuccessPage from "./OrderConfirmation";
 
-// --- Define types for your data structures ---
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  imageUrl?: string;
-  category?: string;
-}
 
-interface ShippingAddress {
-  fullName: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
 
-interface UserState {
-  user: {
-    id: string;
-    name?: string;
-    email?: string;
-    phone?: string;
-    accessToken?: string;
-    shippingInfo?: ShippingAddress;
-  } | null;
-}
+
+
 
 // Razorpay Public Key ID - REMEMBER TO REPLACE THIS WITH YOUR ACTUAL KEY!
 const RAZORPAY_KEY_ID = "rzp_test_5wU1xQg8xAioM6"; // <--- REPLACE WITH YOUR ACTUAL RAZORPAY TEST KEY ID
 
-const CheckoutPage: React.FC = () => {
+const CheckoutPage = () => {
   const { cart, cartTotal, clearCart } = useCart();
   const { user } = useSelector(
-    (state: { user: UserState["user"] }) => state.user
+    (state) => state.user
   );
   const navigate = useNavigate();
   const [orderDetails, setOrderDetails] = useState(null);
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
+  const [shippingAddress, setShippingAddress] = useState({
     fullName: "",
     addressLine1: "",
     addressLine2: "",
@@ -58,12 +32,12 @@ const CheckoutPage: React.FC = () => {
     country: "India",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<string>("razorpay");
-  const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState("razorpay");
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const [orderPlaced, setOrderPlaced] = useState<boolean>(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   useEffect(() => {
     if (cart.length === 0 && !orderPlaced) {
@@ -85,7 +59,7 @@ const CheckoutPage: React.FC = () => {
     }
   }, [user]);
 
-  const handleShippingChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleShippingChange = (e) => {
     const { name, value } = e.target;
     setShippingAddress((prevAddress) => ({
       ...prevAddress,
@@ -93,7 +67,7 @@ const CheckoutPage: React.FC = () => {
     }));
   };
 
-  const validateOrderForm = (): boolean => {
+  const validateOrderForm = ()=> {
     if (!agreeToTerms) {
       setError("Please agree to the terms and conditions.");
       return false;
@@ -164,7 +138,7 @@ const CheckoutPage: React.FC = () => {
         name: "Sacred Store",
         description: "Payment for your order",
         order_id: orderId, // Order ID received from backend
-        handler: async function (response: any) {
+        handler: async function (response) {
           console.log("Razorpay Payment Success Response:", response);
 
           try {
@@ -246,10 +220,10 @@ const CheckoutPage: React.FC = () => {
                 setShowOrderSuccess(true); // Show the order success page
                 clearCart();
 
-                // Optional: Show a brief success message
+             
                 alert("Payment Successful and Order Placed!");
               } else {
-                // If order placement fails AFTER payment, handle accordingly
+          
                 alert(
                   "Payment successful but failed to place order. Please contact support."
                 );
@@ -268,7 +242,7 @@ const CheckoutPage: React.FC = () => {
                   "Payment verification failed."
               );
             }
-          } catch (error: any) {
+          } catch (error) {
             console.error(
               "Error during payment verification or order placement:",
               error
@@ -307,10 +281,10 @@ const CheckoutPage: React.FC = () => {
         return;
       }
 
-      const razorpayInstance = new (window as any).Razorpay(options);
+      const razorpayInstance = new Razorpay(options);
       razorpayInstance.open();
 
-      razorpayInstance.on("payment.failed", function (response: any) {
+      razorpayInstance.on("payment.failed", function (response) {
         console.error("Razorpay Payment Failed:", response.error);
         alert(
           `Payment Failed: ${
@@ -322,7 +296,7 @@ const CheckoutPage: React.FC = () => {
         );
         setIsLoading(false);
       });
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error initiating Razorpay payment:", err);
       setError(
         err.response?.data?.message ||
@@ -392,7 +366,7 @@ const CheckoutPage: React.FC = () => {
       //   "lastOrderDetails",
       //   JSON.stringify(response.data.orderDetails)
       // );
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error placing COD order:", err);
       setError(
         err.response?.data?.message ||
@@ -410,7 +384,7 @@ const CheckoutPage: React.FC = () => {
     // navigate('/shop') or whatever your routing logic is
   };
   // --- Main form submission handler ---
-  const handleSubmitOrder = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
 
     if (!validateOrderForm()) {
@@ -486,7 +460,7 @@ const CheckoutPage: React.FC = () => {
               </div>
 
               <div className="space-y-4 mb-6">
-                {cart.map((item: CartItem) => (
+                {cart.map((item) => (
                   <div
                     key={item.id}
                     className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100"
@@ -748,7 +722,7 @@ const CheckoutPage: React.FC = () => {
                         type="radio"
                         value="razorpay"
                         checked={paymentMethod === "razorpay"}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e) =>
                           setPaymentMethod(e.target.value)
                         }
                         className="h-4 w-4 text-orange-600 border-gray-300 focus:ring-orange-500"
@@ -791,7 +765,7 @@ const CheckoutPage: React.FC = () => {
                         type="radio"
                         value="cod"
                         checked={paymentMethod === "cod"}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e) =>
                           setPaymentMethod(e.target.value)
                         }
                         className="h-4 w-4 text-orange-600 border-gray-300 focus:ring-orange-500"
@@ -827,7 +801,7 @@ const CheckoutPage: React.FC = () => {
                       name="agreeToTerms"
                       type="checkbox"
                       checked={agreeToTerms}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      onChange={(e) =>
                         setAgreeToTerms(e.target.checked)
                       }
                       className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"

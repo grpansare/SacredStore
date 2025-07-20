@@ -6,12 +6,9 @@ import Footer from "../Components/Footer"; // Adjust path if necessary
 import { CartProvider } from "../context/CartContext"; // Adjust path if necessary
 import { Outlet } from "react-router-dom";
 
-interface PublicLayoutProps {
-  children: React.ReactNode;
-  cartItems: any[]; // Pass cartItems down from App.jsx
-}
 
-const PublicLayout: React.FC<PublicLayoutProps> = ({ children, cartItems }) => {
+
+const PublicLayout= ({ children, cartItems }) => {
   return (
     <>
       <Navbar cartItems={cartItems} />
