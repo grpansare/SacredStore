@@ -78,7 +78,7 @@ public class AuthController {
                 
                 user.getRoles()));
     }
-    @GetMapping("/)
+    @GetMapping("/")
     public String getMsg(){
         return "hello";
     }
