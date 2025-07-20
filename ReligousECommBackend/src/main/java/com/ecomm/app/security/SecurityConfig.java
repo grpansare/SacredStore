@@ -83,7 +83,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // Read allowed origins from application.properties
-        String[] allowedOrigins = System.getProperty("cors.allowedOrigins", "http://localhost:5173").split(",");
+        String[] allowedOrigins = System.getProperty("cors.allowedOrigins", "https://sacredstore-2.onrender.com").split(",");
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
