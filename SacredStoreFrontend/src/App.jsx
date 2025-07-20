@@ -6,7 +6,7 @@ import PublicLayout from './Pages/Layout';
 import Homepage from './Pages/Homepage';
 import ProductPage from './Pages/ProductsPage';
 import CartPage from './Pages/CartPage';
-import AdminDashboard from './Pages/AdminDashboard';
+import AdminDashboard from './Pages/AdminDashBoard';
 import AboutUs from './Pages/AboutUs';
   import ProfilePage from './Pages/ProfilePage';
 import CheckoutPage from './Pages/CheckOutPage';
