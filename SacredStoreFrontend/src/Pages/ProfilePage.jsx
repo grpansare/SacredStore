@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
-import { updateUser, logout } from "../store/userSlice"; // Ensure 'logout' is also imported if used for auth check redirection
+import { updateUser, logout } from "../store/UserSlice"; // Ensure 'logout' is also imported if used for auth check redirection
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios"; // Import axios
