@@ -1,8 +1,8 @@
-import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // Note the camelCase 'jwtDecode'
-import api from './api';
+import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // Note the camelCase 'jwtDecode'
+import api from "./api";
 
-const API_URL = 'http://localhost:8080/api/auth/';
+const API_URL = "https://sacredstore.onrender.com/api/auth/";
 
 interface LoginResponse {
   accessToken: string;
@@ -30,37 +30,40 @@ interface DecodedToken {
   // ... other claims
 }
 
-const register = (fullname:string,email: string, password: string, roles: string[] = ['user']) => {
-  return axios.post<RegisterResponse>(API_URL + 'signup', {
+const register = (
+  fullname: string,
+  email: string,
+  password: string,
+  roles: string[] = ["user"]
+) => {
+  return axios.post<RegisterResponse>(API_URL + "signup", {
     fullname,
     email,
     password,
-    role: roles,  
+    role: roles,
   });
 };
 
 const login = (email: string, password: string) => {
-  return axios.post<LoginResponse>(API_URL + 'signin', {
-    email,
-    password,
-  })
-  .then((response) => {
-    if (response.data.accessToken) {
-     
-      localStorage.setItem('user', JSON.stringify(response.data));
-    }
-    return response.data;
-  });
+  return axios
+    .post<LoginResponse>(API_URL + "signin", {
+      email,
+      password,
+    })
+    .then((response) => {
+      if (response.data.accessToken) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      return response.data;
+    });
 };
 
 const logout = () => {
-  localStorage.removeItem('user');
+  localStorage.removeItem("user");
 };
 
-
-
 const getCurrentUser = (): LoginResponse | null => {
-  const userStr = localStorage.getItem('user');
+  const userStr = localStorage.getItem("user");
   if (userStr) {
     return JSON.parse(userStr);
   }
@@ -85,22 +88,24 @@ const refreshAccessToken = async (): Promise<string | null> => {
   }
 
   try {
-    const response = await axios.post<TokenRefreshResponse>(API_URL + 'refreshtoken', {
-      refreshToken: currentUser.refreshToken,
-    });
+    const response = await axios.post<TokenRefreshResponse>(
+      API_URL + "refreshtoken",
+      {
+        refreshToken: currentUser.refreshToken,
+      }
+    );
 
     const newAccessToken = response.data.accessToken;
     const updatedUser = { ...currentUser, accessToken: newAccessToken };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    localStorage.setItem("user", JSON.stringify(updatedUser));
 
     return newAccessToken;
   } catch (error) {
-    console.error('Failed to refresh token:', error);
+    console.error("Failed to refresh token:", error);
     logout();
     return null;
   }
 };
-
 
 const AuthService = {
   register,
