@@ -1,6 +1,6 @@
 // src/components/FilterPanel.jsx
-import React from 'react';
-import { Star, X } from 'lucide-react';
+import React from "react";
+import { Star, X } from "lucide-react";
 
 const FilterPanel = ({
   showFilters,
@@ -15,9 +15,8 @@ const FilterPanel = ({
   setSortBy,
   products, // We pass products to determine the initial price range for "Clear All"
   clearAllFilters, // New prop for a centralized clear function
-  isSearchActive // New prop to determine if Relevance option should show
+  isSearchActive, // New prop to determine if Relevance option should show
 }) => {
-
   // This `clearFilters` function is specific to the FilterPanel's internal state management
   // It resets the local filter states, and then calls the parent's `clearAllFilters`
   const handleClearFilters = () => {
@@ -37,7 +36,6 @@ const FilterPanel = ({
     // clearAllFilters(); // If the parent's clearAllFilters does more, call it here
   };
 
-
   return (
     <div
       className={`${
@@ -54,12 +52,12 @@ const FilterPanel = ({
         </button>
         {/* Close button for mobile filters */}
         {showFilters && (
-            <button
-                onClick={() => setShowFilters(false)}
-                className="lg:hidden p-1 rounded-full text-gray-500 hover:bg-gray-100"
-            >
-                <X className="w-5 h-5" />
-            </button>
+          <button
+            onClick={() => setShowFilters(false)}
+            className="lg:hidden p-1 rounded-full text-gray-500 hover:bg-gray-100"
+          >
+            <X className="w-5 h-5" />
+          </button>
         )}
       </div>
 
@@ -72,9 +70,10 @@ const FilterPanel = ({
         <h4 className="text-sm font-medium text-gray-700 mb-3">Price Range</h4>
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm text-gray-600">
-            <span>₹{priceRange[0]}</span>
-            <span>₹{priceRange[1]}</span>
+            <span>${priceRange[0]}</span>
+            <span>${priceRange[1]}</span>
           </div>
+          $
           <div className="flex gap-2">
             <input
               type="number"
@@ -137,7 +136,6 @@ const FilterPanel = ({
 
       {/* You can also put the Sort By dropdown here if you prefer it inside the filter panel */}
       {/* For now, keeping it in ProductPage as it's a separate control */}
-
     </div>
   );
 };

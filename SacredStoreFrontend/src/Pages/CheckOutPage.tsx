@@ -372,24 +372,19 @@ const CheckoutPage: React.FC = () => {
         }
       );
 
-     
       const completeOrderData = {
-                  // Use the order ID from backend response
-                  orderId:
-                    response.data.orderId ||
-                    response.data.id,
-                  // Include all the data we sent
-                  ...orderData,
-                  // Add any additional data from the backend response
-                  ...response.data,
-                };
+        // Use the order ID from backend response
+        orderId: response.data.orderId || response.data.id,
+        // Include all the data we sent
+        ...orderData,
+        // Add any additional data from the backend response
+        ...response.data,
+      };
 
-                setOrderDetails(completeOrderData);
-              
-                setShowOrderSuccess(true); // Show the order success page
-              
+      setOrderDetails(completeOrderData);
 
-           
+      setShowOrderSuccess(true); // Show the order success page
+
       console.log("COD Order placed successfully:", response.data);
       setOrderPlaced(true);
       clearCart();
@@ -397,7 +392,6 @@ const CheckoutPage: React.FC = () => {
       //   "lastOrderDetails",
       //   JSON.stringify(response.data.orderDetails)
       // );
-    
     } catch (err: any) {
       console.error("Error placing COD order:", err);
       setError(
@@ -409,12 +403,12 @@ const CheckoutPage: React.FC = () => {
       setIsLoading(false);
     }
   };
-const handleContinueShopping = () => {
-  setShowOrderSuccess(false);
-  setOrderDetails(null);
-  // Navigate to shop/home page
-  // navigate('/shop') or whatever your routing logic is
-};
+  const handleContinueShopping = () => {
+    setShowOrderSuccess(false);
+    setOrderDetails(null);
+    // Navigate to shop/home page
+    // navigate('/shop') or whatever your routing logic is
+  };
   // --- Main form submission handler ---
   const handleSubmitOrder = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -433,20 +427,16 @@ const handleContinueShopping = () => {
     }
   };
 
-
   if (showOrderSuccess && orderDetails) {
-  return (
-    <OrderSuccessPage 
-      orderData={orderDetails}
-      onContinueShopping={handleContinueShopping}
-    />
-  );
-}
+    return (
+      <OrderSuccessPage
+        orderData={orderDetails}
+        onContinueShopping={handleContinueShopping}
+      />
+    );
+  }
 
   return (
-
-
-
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -542,7 +532,7 @@ const handleContinueShopping = () => {
           {/* Shipping and Payment Form - Enhanced */}
           <div className="lg:col-span-2 order-1 lg:order-2">
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-              {/* Shipping Information Section */}
+              {/* Sh$pping Information Section */}
               <div className="p-8 border-b border-slate-200">
                 <div className="flex items-center mb-6">
                   <div className="flex-shrink-0">
@@ -713,7 +703,6 @@ const handleContinueShopping = () => {
                   </div>
                 </form>
               </div>
-
               {/* Payment Method Section */}
               <div className="p-8 border-b border-slate-200">
                 <div className="flex items-center mb-6">
@@ -829,7 +818,6 @@ const handleContinueShopping = () => {
                   </div>
                 </div>
               </div>
-
               {/* Terms and Submit Section */}
               <div className="p-8">
                 <div className="flex items-start mb-6">
@@ -906,6 +894,7 @@ const handleContinueShopping = () => {
                   </p>
                 </div>
               </div>
+              
             </div>
           </div>
         </div>

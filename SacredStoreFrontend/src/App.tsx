@@ -11,6 +11,7 @@ import AboutUs from './Pages/AboutUs';
   import ProfilePage from './Pages/ProfilePage';
 import CheckoutPage from './Pages/CheckOutPage';
 import ReligiousOrdersPage from './Pages/MyOrders';
+import SearchResultsPage from './Pages/SearchedResults';
 
 
 const App = () => {
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="aboutus" element={<AboutUs />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="my-orders" element={<ReligiousOrdersPage />} />
+            <Route path="/products/search" element={<SearchResultsPage />} />
           {/* <Route path="order-confirmation" element={<OrderSuccessPagege />} /> */}
           {/* <Route path="*" element={<NotFoundPage />} /> */}
         </Route>

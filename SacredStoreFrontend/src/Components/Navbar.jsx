@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react"; // Added useEffect, useRef
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/userSlice";
@@ -12,7 +12,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
 
 // Lucide React Icons
-import { Menu as MenuIcon, Search, ShoppingCart, User, X, LogOut, Settings, ListOrdered } from "lucide-react";
+import { Menu as MenuIcon, Search, ShoppingCart, User, X, LogOut, ListOrdered } from "lucide-react";
 
 // SweetAlert2
 import Swal from 'sweetalert2';
@@ -20,6 +20,7 @@ import withReactContent from 'sweetalert2-react-content';
 
 // Assuming AuthModal is a separate component
 import AuthModal from "./AuthModal";
+import axios from "axios";
 
 const MySwal = withReactContent(Swal);
 
@@ -28,11 +29,71 @@ const Navbar = ({ setSelectedCategory }) => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]); // New state for suggestions
+  const [showSuggestions, setShowSuggestions] = useState(false); // New state to control visibility
+  const searchInputRef = useRef(null); // Ref for desktop search input
+  const mobileSearchInputRef = useRef(null); // Ref for mobile search input
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { cartItemsCount } = useCart();
+
+  // Debounce logic for suggestions
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchTerm.trim().length < 2) { // Only fetch if more than 1 character to reduce noise
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      try {
+        // Replace with your actual API endpoint for suggestions
+        // This endpoint should be light and return minimal data (e.g., just names)
+        const response = await axios(`http://localhost:8080/api/products/suggestions?q=${encodeURIComponent(searchTerm.trim())}`);
+        // Check if the response is ok
+        if (response.status !== 200) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+
+        const data = response.data;
+        setSuggestions(data);
+        setShowSuggestions(true); // Show suggestions only if there are results
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]); // Clear suggestions on error
+        setShowSuggestions(false);
+      }
+    };
+
+    const handler = setTimeout(() => {
+      fetchSuggestions();
+    }, 300); // Debounce time: 300ms
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]); // Re-run effect when searchTerm changes
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        searchInputRef.current && !searchInputRef.current.contains(event.target) &&
+        mobileSearchInputRef.current && !mobileSearchInputRef.current.contains(event.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
 
   // Handlers for MUI Profile Menu
   const handleMenuClick = (event) => {
@@ -92,6 +153,38 @@ const Navbar = ({ setSelectedCategory }) => {
     handleMenuClose();
   };
 
+  // Handler for search input change
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    // Always show suggestions when typing, if there are any
+    if (event.target.value.trim().length > 1) {
+        setShowSuggestions(true);
+    } else {
+        setShowSuggestions(false);
+    }
+  };
+
+  // Handler for search submission
+  const handleSearchSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission behavior if wrapped in a form
+    if (searchTerm.trim()) {
+      navigate(`/products/search?query=${encodeURIComponent(searchTerm.trim())}`);
+      setIsMenuOpen(false);
+      setSearchTerm("");
+      setSuggestions([]); // Clear suggestions after search
+      setShowSuggestions(false);
+    }
+  };
+
+  // Handler for clicking on a suggestion
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion); // Set the search input to the clicked suggestion
+    navigate(`/products/search?query=${encodeURIComponent(suggestion)}`);
+    setSuggestions([]); // Clear suggestions
+    setShowSuggestions(false);
+    setIsMenuOpen(false); // Close mobile menu if applicable
+  };
+
   return (
     <div>
       <nav className="bg-white shadow-lg sticky top-0 z-50">
@@ -115,15 +208,34 @@ const Navbar = ({ setSelectedCategory }) => {
             </Link>
 
             {/* Search Bar - Desktop */}
-            <div className="hidden md:flex flex-1 max-w-lg mx-8">
-              <div className="w-full relative">
+            <div className="hidden md:flex flex-1 max-w-lg mx-8 relative" ref={searchInputRef}> {/* Added ref and relative */}
+              <form onSubmit={handleSearchSubmit} className="w-full">
                 <input
                   type="text"
                   placeholder="Search for religious items, books, idols..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onFocus={() => searchTerm.trim().length > 1 && suggestions.length > 0 && setShowSuggestions(true)} // Show suggestions on focus if there's a term and suggestions
                 />
-                <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400" />
-              </div>
+                <button type="submit" className="absolute right-3 top-2.5">
+                    <Search className="w-5 h-5 text-gray-400 hover:text-orange-500" />
+                </button>
+              </form>
+              {/* Desktop Suggestions */}
+              {showSuggestions && suggestions.length > 0 && (
+                <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg top-full shadow-lg max-h-60 overflow-y-auto">
+                  {suggestions.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800"
+                      onClick={() => handleSuggestionClick(suggestion)}
+                    >
+                      {suggestion}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             {/* Navigation Links */}
@@ -249,19 +361,74 @@ const Navbar = ({ setSelectedCategory }) => {
               )}
             </button>
           </div>
+           <div className="md:hidden flex justify-between items-center h-16">
+            {/* Search Bar - Mobile */}
+            <div className="md:hidden   flex-1 max-w-lg mx-4 relative" ref={mobileSearchInputRef}> {/* Added ref and relative */}
+              <form onSubmit={handleSearchSubmit} className="w-full">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onFocus={() => searchTerm.trim().length > 1 && suggestions.length > 0 && setShowSuggestions(true)} // Show suggestions on focus if there's a term and suggestions
+                />
+                <button type="submit" className="absolute right-3 top-2.5">
+                    <Search className="w-5 h-5 text-gray-400 hover:text-orange-500" />
+                </button>
+              </form>
+              {/* Mobile Suggestions */}
+              {showSuggestions && suggestions.length > 0 && (
+                <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg top-full shadow-lg max-h-60 overflow-y-auto">
+                  {suggestions.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800"
+                      onClick={() => handleSuggestionClick(suggestion)}
+                    >
+                      {suggestion}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            </div>
+            
+
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t">
             <div className="px-4 py-3 space-y-3">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
-                <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400" />
+              <div className="relative" ref={mobileSearchInputRef}> {/* Added ref and relative */}
+                <form onSubmit={handleSearchSubmit} className="w-full">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    onFocus={() => searchTerm.trim().length > 1 && suggestions.length > 0 && setShowSuggestions(true)}
+                  />
+                  <button type="submit" className="absolute right-3 top-2.5">
+                      <Search className="w-5 h-5 text-gray-400 hover:text-orange-500" />
+                  </button>
+                </form>
+                {/* Mobile Suggestions */}
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg top-full shadow-lg max-h-60 overflow-y-auto">
+                    {suggestions.map((suggestion, index) => (
+                      <li
+                        key={index}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800"
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        {suggestion}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               <Link
                 to="/"
@@ -269,6 +436,7 @@ const Navbar = ({ setSelectedCategory }) => {
                 onClick={() => {
                   setSelectedCategory && setSelectedCategory(null);
                   setIsMenuOpen(false);
+                  setShowSuggestions(false); // Hide suggestions when navigating
                 }}
               >
                 Home
@@ -276,21 +444,30 @@ const Navbar = ({ setSelectedCategory }) => {
               <Link
                 to="/products/all-products"
                 className="block py-2 text-gray-700 hover:text-orange-500"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setShowSuggestions(false); // Hide suggestions when navigating
+                }}
               >
                 Products
               </Link>
               <Link
                 to="/aboutus"
                 className="block py-2 text-gray-700 hover:text-orange-500"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setShowSuggestions(false); // Hide suggestions when navigating
+                }}
               >
                 About
               </Link>
               <Link
                 to="/cart"
                 className="block py-2 text-gray-700 hover:text-orange-500"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setShowSuggestions(false); // Hide suggestions when navigating
+                }}
               >
                 Cart ({cartItemsCount})
               </Link>
@@ -321,6 +498,7 @@ const Navbar = ({ setSelectedCategory }) => {
                   onClick={() => {
                     setIsAuthModalOpen(true);
                     setIsMenuOpen(false);
+                    setShowSuggestions(false); // Hide suggestions when opening modal
                   }}
                   className="w-full bg-orange-500 text-white py-2 rounded-lg font-medium"
                 >

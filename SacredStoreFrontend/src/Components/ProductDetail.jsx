@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronLeft, Star, ShoppingCart, Minus, Plus } from 'lucide-react';
+import React, { useState } from "react";
+import { ChevronLeft, Star, ShoppingCart, Minus, Plus } from "lucide-react";
 
 const ProductDetail = ({ product, onBack, onAddToCart }) => {
   const [quantity, setQuantity] = useState(1);
@@ -51,41 +51,64 @@ const ProductDetail = ({ product, onBack, onAddToCart }) => {
 
           {/* Product Info */}
           <div className="md:w-1/2">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">{product.name}</h1>
-            <div className="text-lg text-orange-600 font-semibold mb-2">{product.category}</div>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              {product.name}
+            </h1>
+            <div className="text-lg text-orange-600 font-semibold mb-2">
+              {product.category}
+            </div>
 
             <div className="flex items-center gap-2 mb-4">
               <Star className="w-5 h-5 text-yellow-400 fill-current" />
-              <span className="text-lg font-medium text-gray-700">{product.rating}</span>
-              <span className="text-md text-gray-500">({product.reviews} reviews)</span>
+              <span className="text-lg font-medium text-gray-700">
+                {product.rating}
+              </span>
+              <span className="text-md text-gray-500">
+                ({product.reviews} reviews)
+              </span>
             </div>
 
             <div className="flex items-baseline gap-3 mb-6">
-              <span className="text-3xl font-bold text-gray-900">₹{product.price}</span>
-              {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-lg text-gray-500 line-through">₹{product.originalPrice}</span>
-              )}
-              {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-md text-red-500 font-semibold">
-                  {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                </span>
-              )}
+              <span className="text-3xl font-bold text-gray-900">
+                ${product.price}
+              </span>
+              {product.originalPrice &&
+                product.originalPrice > product.price && (
+                  <span className="text-lg text-gray-500 line-through">
+                    ${product.originalPrice}
+                  </span>
+                )}
+              {product.originalPrice &&
+                product.originalPrice > product.price && (
+                  <span className="text-md text-red-500 font-semibold">
+                    {Math.round(
+                      ((product.originalPrice - product.price) /
+                        product.originalPrice) *
+                        100
+                    )}
+                    % OFF
+                  </span>
+                )}
             </div>
 
-            <p className="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+            <p className="text-gray-700 leading-relaxed mb-6">
+              {product.description}
+            </p>
 
             {/* Quantity Selector */}
             <div className="flex items-center mb-6">
               <span className="text-gray-700 font-medium mr-4">Quantity:</span>
               <button
-                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
                 className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
               >
                 <Minus className="w-4 h-4 text-gray-600" />
               </button>
-              <span className="mx-4 text-xl font-semibold text-gray-800">{quantity}</span>
+              <span className="mx-4 text-xl font-semibold text-gray-800">
+                {quantity}
+              </span>
               <button
-                onClick={() => setQuantity(prev => prev + 1)}
+                onClick={() => setQuantity((prev) => prev + 1)}
                 className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
               >
                 <Plus className="w-4 h-4 text-gray-600" />

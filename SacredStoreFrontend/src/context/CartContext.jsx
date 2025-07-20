@@ -46,7 +46,7 @@ const cartReducer = (state, action) => {
       console.log("Adding to cart:", productToAdd, "Quantity:", quantity);
       const existingItem = state.find((item) => item.id === productToAdd.id);
       if (existingItem) {
-        alert("item exists")
+        alert("item exists");
         return state.map((item) =>
           item.id === productToAdd.id
             ? { ...item, quantity: item.quantity + quantity }

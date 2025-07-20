@@ -171,7 +171,14 @@ const ProductPage = () => {
     }
 
     setFilteredProducts(currentFiltered);
-  }, [products, searchQuery, priceRange, selectedRating, sortBy, getRelevanceScore]); // Added getRelevanceScore to dependencies
+  }, [
+    products,
+    searchQuery,
+    priceRange,
+    selectedRating,
+    sortBy,
+    getRelevanceScore,
+  ]); // Added getRelevanceScore to dependencies
 
   // Clear All Filters function for the ProductPage
   const clearAllFilters = useCallback(() => {
@@ -188,7 +195,6 @@ const ProductPage = () => {
       setPriceRange([0, 3000]); // Fallback default
     }
   }, [products]); // `products` is a dependency here
-
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -261,7 +267,11 @@ const ProductPage = () => {
           >
             <Filter className="w-4 h-4" />
             Filters
-            {showFilters ? <X className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            {showFilters ? (
+              <X className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
           </button>
 
           {/* Sort dropdown */}

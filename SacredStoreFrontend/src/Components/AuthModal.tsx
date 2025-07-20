@@ -12,9 +12,8 @@ import {
 } from "lucide-react";
 import AuthService from "../api/auth"; // Ensure this path is correct
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { loginSuccess } from "../store/UserSlice";
-
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -65,32 +64,30 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     try {
       if (isLogin) {
         // --- Login Logic ---
-        const res=  await AuthService.login(formData.email, formData.password);
+        const res = await AuthService.login(formData.email, formData.password);
         console.log(res);
-        dispatch(loginSuccess(res))
-       if(res.roles[0].name == "ROLE_ADMIN"){
+        dispatch(loginSuccess(res));
+        if (res.roles[0].name == "ROLE_ADMIN") {
           navigate("/admin");
-        }else if(res.roles[0].name == "ROLE_USER"){ 
-             setMessage("Login successful!");
-          onClose()
+        } else if (res.roles[0].name == "ROLE_USER") {
+          setMessage("Login successful!");
+          onClose();
           setFormData({
             firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    agreeToTerms: false,   
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            agreeToTerms: false,
           });
           setMessage("");
           setIsLogin(true);
           // window.location.reload();
-            const redirectPath = localStorage.getItem("redirectAfterLogin") || "/";
-  localStorage.removeItem("redirectAfterLogin");
-  navigate(redirectPath);
-        
-        }        
-     
-      
+          const redirectPath =
+            localStorage.getItem("redirectAfterLogin") || "/";
+          localStorage.removeItem("redirectAfterLogin");
+          navigate(redirectPath);
+        }
       } else {
         // --- Register Logic ---
         if (formData.password !== formData.confirmPassword) {
@@ -195,7 +192,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           {/* Logo Section */}
           <div className="text-center mb-6 relative z-10">
             <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-full mb-3 shadow-lg">
-             🕉
+              🕉
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
               Sacred Store
@@ -237,10 +234,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {!isLogin && (
               <div className="grid grid-cols-2 gap-3 animate-in slide-in-from-top duration-300">
                 <div className="relative">
-  <User
-  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10"
-  size={18}
-/>
+                  <User
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10"
+                    size={18}
+                  />
                   <input
                     type="text"
                     name="firstName"
@@ -252,7 +249,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="relative">
                   <User
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10" 
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10"
                     size={18}
                   />
                   <input
@@ -267,7 +264,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
             )}
 
-        
             <div className="relative">
               <Mail
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 z-10"
@@ -338,7 +334,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
             )}
 
-         
             {/* <div className="flex items-center justify-between text-sm">
               {isLogin ? (
                 <label className="flex items-center">

@@ -2,15 +2,15 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { updateUser, logout } from "../store/userSlice"; // Ensure 'logout' is also imported if used for auth check redirection
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import axios from 'axios'; // Import axios
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import axios from "axios"; // Import axios
 
 const MySwal = withReactContent(Swal);
 
 // Define your backend API base URL
 // Make sure this matches your Spring Boot backend URL (e.g., http://localhost:8080)
-const API_BASE_URL = 'http://localhost:8080/api'; // Or your deployed backend URL
+const API_BASE_URL = "http://localhost:8080/api"; // Or your deployed backend URL
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -34,13 +34,13 @@ const ProfilePage = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       MySwal.fire({
-        title: 'Access Denied',
-        text: 'Please log in to view your profile.',
-        icon: 'info',
-        confirmButtonText: 'Go to Login',
+        title: "Access Denied",
+        text: "Please log in to view your profile.",
+        icon: "info",
+        confirmButtonText: "Go to Login",
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate('/'); // Redirect to your login page
+          navigate("/"); // Redirect to your login page
         }
       });
       // Optionally, if you just want to redirect without a modal:
@@ -71,26 +71,27 @@ const ProfilePage = () => {
         phone: userData.phone || "",
         address: userData.address || "",
       });
-  
     } catch (error) {
       console.error("Error fetching user profile:", error);
       setFetchError("Failed to load profile data. Please try again.");
       if (error.response && error.response.status === 401) {
         // Token expired or invalid, log out the user
         MySwal.fire({
-          title: 'Session Expired',
-          text: 'Your session has expired. Please log in again.',
-          icon: 'warning',
-          confirmButtonText: 'OK',
+          title: "Session Expired",
+          text: "Your session has expired. Please log in again.",
+          icon: "warning",
+          confirmButtonText: "OK",
         }).then(() => {
           dispatch(logout()); // Dispatch logout action
-          navigate('/login');
+          navigate("/login");
         });
       } else {
         MySwal.fire({
-          title: 'Error!',
-          text: 'Failed to fetch profile. ' + (error.response?.data?.message || error.message),
-          icon: 'error',
+          title: "Error!",
+          text:
+            "Failed to fetch profile. " +
+            (error.response?.data?.message || error.message),
+          icon: "error",
         });
       }
     } finally {
@@ -98,7 +99,6 @@ const ProfilePage = () => {
     }
   }, [isAuthenticated, dispatch, navigate]); // Add dependencies
 
- 
   useEffect(() => {
     fetchUserProfile();
   }, [fetchUserProfile]); // Depend on the memoized fetchUserProfile function
@@ -116,36 +116,44 @@ const ProfilePage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.put(`${API_BASE_URL}/users/profile`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Send the JWT token for update
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.put(
+        `${API_BASE_URL}/users/profile`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send the JWT token for update
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const updatedUserData = response.data;
       dispatch(updateUser(updatedUserData)); // Update Redux state with the newly updated data
 
       MySwal.fire({
-        title: 'Success!',
-        text: 'Your profile has been updated.',
-        icon: 'success',
+        title: "Success!",
+        text: "Your profile has been updated.",
+        icon: "success",
         timer: 2000,
         showConfirmButton: false,
       });
       setIsEditing(false); // Exit edit mode after successful update
     } catch (error) {
       console.error("Error updating profile:", error);
-      let errorMessage = 'Failed to update profile. Please try again.';
-      if (error.response && error.response.data && error.response.data.message) {
-          errorMessage = error.response.data.message;
+      let errorMessage = "Failed to update profile. Please try again.";
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        errorMessage = error.response.data.message;
       } else if (error.message) {
-          errorMessage = error.message;
+        errorMessage = error.message;
       }
       MySwal.fire({
-        title: 'Error!',
+        title: "Error!",
         text: errorMessage,
-        icon: 'error',
+        icon: "error",
       });
     } finally {
       setLoading(false);
@@ -196,22 +204,26 @@ const ProfilePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="text-gray-700">
               <p className="font-semibold text-gray-800">Full Name:</p>
-              <p className="text-gray-600">{formData.fullname}</p> {/* Use formData */}
+              <p className="text-gray-600">{formData.fullname}</p>{" "}
+              {/* Use formData */}
             </div>
             <div className="text-gray-700">
               <p className="font-semibold text-gray-800">Email:</p>
-              <p className="text-gray-600">{formData.email}</p> {/* Use formData */}
+              <p className="text-gray-600">{formData.email}</p>{" "}
+              {/* Use formData */}
             </div>
             {formData.phone && (
               <div className="text-gray-700">
                 <p className="font-semibold text-gray-800">Phone:</p>
-                <p className="text-gray-600">{formData.phone}</p> {/* Use formData */}
+                <p className="text-gray-600">{formData.phone}</p>{" "}
+                {/* Use formData */}
               </div>
             )}
             {formData.address && (
               <div className="text-gray-700 col-span-1 md:col-span-2">
                 <p className="font-semibold text-gray-800">Address:</p>
-                <p className="text-gray-600">{formData.address}</p> {/* Use formData */}
+                <p className="text-gray-600">{formData.address}</p>{" "}
+                {/* Use formData */}
               </div>
             )}
             {/* Add more profile fields as needed */}
@@ -222,7 +234,10 @@ const ProfilePage = () => {
         {isEditing && (
           <form onSubmit={handleUpdate} className="mt-8 space-y-6">
             <div>
-              <label htmlFor="fullname" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="fullname"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Full Name
               </label>
               <input
@@ -235,7 +250,10 @@ const ProfilePage = () => {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email Address
               </label>
               <input
@@ -253,7 +271,10 @@ const ProfilePage = () => {
               </p>
             </div>
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Phone Number
               </label>
               <input
@@ -266,7 +287,10 @@ const ProfilePage = () => {
               />
             </div>
             <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Address
               </label>
               <textarea
@@ -295,7 +319,7 @@ const ProfilePage = () => {
                 } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500`}
                 disabled={loading}
               >
-                {loading ? 'Saving...' : 'Save Changes'}
+                {loading ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </form>

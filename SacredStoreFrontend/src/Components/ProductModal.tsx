@@ -4,7 +4,6 @@ import Swal from "sweetalert2";
 
 import { useCart } from "../context/CartContext";
 
-// Product Modal Component
 const ProductModal = ({ product, isOpen, onClose }) => {
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -18,9 +17,8 @@ const ProductModal = ({ product, isOpen, onClose }) => {
     setIsAddingToCart(true);
 
     try {
-      console.log("Quantity:", selectedQuantity);
-
-      await addToCart({ ...product, quantity: selectedQuantity });
+      // Pass the product with the selected quantity
+      await addToCart(product, selectedQuantity);
 
       Swal.fire({
         title: "Added to Cart!",
@@ -85,11 +83,11 @@ const ProductModal = ({ product, isOpen, onClose }) => {
         <div className="p-6">
           <div className="grid md:grid-cols-2 gap-8">
             {/* Product Image */}
-            <div className="relative justify-center items-center flex">
+            <div className="relative">
               <img
                 src={product.imageUrl}
                 alt={product.name}
-                className="w-50 h-80 object-fill rounded-lg shadow-md"
+                className="w-full h-96 object-cover rounded-lg shadow-md"
               />
               {product.originalPrice > product.price && (
                 <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-md text-sm font-medium">
@@ -129,17 +127,17 @@ const ProductModal = ({ product, isOpen, onClose }) => {
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl font-bold text-gray-900">
-                    ₹{product.price}
+                    ${product.price}
                   </span>
                   {product.originalPrice > product.price && (
                     <span className="text-lg text-gray-500 line-through">
-                      ₹{product.originalPrice}
+                      ${product.originalPrice}
                     </span>
                   )}
                 </div>
                 {product.originalPrice > product.price && (
                   <div className="text-green-600 font-medium">
-                    You save ₹{product.originalPrice - product.price}
+                    You save ${product.originalPrice - product.price}
                   </div>
                 )}
               </div>
