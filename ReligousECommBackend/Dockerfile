@@ -1,13 +1,24 @@
-# --- Build Stage ---
-FROM maven:3.8.2-jdk-17 AS build
-WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
+# ---------- Build Stage ----------
+FROM eclipse-temurin:17-jdk as builder
 
-# --- Package Stage ---
-FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+RUN ./mvnw clean package -DskipTests
+
+# ---------- Runtime Stage ----------
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+
+# Rename the real JAR to app.jar
+COPY --from=builder /app/target/ReligousECommBackend-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-# The command below activates the 'prod' profile
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
+ENV PORT=8080
+CMD ["java", "-jar", "app.jar"]
