@@ -43,8 +43,7 @@ public class UserController {
                            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // Endpoint to update the current authenticated user's profile
-    // URL: PUT /api/users/profile
+   
     @PutMapping("/profile")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserDto> updateUserProfile(@RequestBody UserDto userDto, Authentication authentication) {

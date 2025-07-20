@@ -23,11 +23,27 @@ public class UserOrderResponse {
 
 	private String id;
     private Long userId;
-    private List<OrderItemDto> items; // Can use OrderItemDTO for simplicity
+    private List<OrderItemResponse> items; // Can use OrderItemDTO for simplicity
+    
+    
     private double totalAmount;
     private Address shippingAddress;
     private PaymentMethod paymentMethod;
     private OrderStatus status;
     private LocalDateTime orderDate;
     private String razorpayPaymentId; // Only if Razorpay
+    
+    
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class OrderItemResponse {
+        private String id; // This is the OrderItem's own ID (UUID generated)
+        private String productId; // ID of the actual product
+        private String name; // Product name
+        private int quantity;
+        private double price; // Price at the time of order
+        private String imageUrl;
+        private String category;
+    }
 }

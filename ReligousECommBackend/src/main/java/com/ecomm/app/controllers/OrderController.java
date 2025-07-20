@@ -1,6 +1,8 @@
 package com.ecomm.app.controllers;
 
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.ecomm.app.dtos.PlaceOrderRequest;
 import com.ecomm.app.dtos.UserOrderResponse;
 import com.ecomm.app.enums.PaymentMethod;
+import com.ecomm.app.models.Order;
 import com.ecomm.app.services.OrderService;
 
 @RestController
@@ -61,6 +64,16 @@ public class OrderController {
         }
 
         return ResponseEntity.ok(order);
+    }
+    
+    
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/getOrders/{userid}")
+    // *** MODIFIED RETURN TYPE: Now returns List<UserOrderResponse> ***
+    public ResponseEntity<List<UserOrderResponse>> getUserOrders(@PathVariable Long userid) {
+        List<UserOrderResponse> orders = orderService.getByUser(userid); // Now gets List<UserOrderResponse>
+        System.out.println(orders);
+        return new ResponseEntity<>(orders, HttpStatus.OK); // Returns List<UserOrderResponse>
     }
 
     // You could add endpoints for /api/orders/my-orders to fetch all orders for the logged-in user

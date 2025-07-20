@@ -1,10 +1,6 @@
 package com.ecomm.app.services;
 
-
-
 import org.springframework.stereotype.Service;
-
-
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -14,13 +10,16 @@ import java.util.stream.Collectors;
 import com.ecomm.app.dtos.OrderItemDto;
 import com.ecomm.app.dtos.PlaceOrderRequest;
 import com.ecomm.app.dtos.UserOrderResponse;
+import com.ecomm.app.dtos.UserOrderResponse.OrderItemResponse;
 import com.ecomm.app.enums.OrderStatus;
 import com.ecomm.app.enums.PaymentMethod;
 import com.ecomm.app.exceptions.ResourceNotFoundException;
 import com.ecomm.app.models.Order;
 import com.ecomm.app.models.OrderItem;
+import com.ecomm.app.models.Product;
 import com.ecomm.app.models.User;
 import com.ecomm.app.repo.OrderRepository;
+import com.ecomm.app.repo.ProductRepository;
 import com.ecomm.app.repo.UserRepository;
 
 @Service
@@ -28,10 +27,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -88,20 +89,30 @@ public class OrderService {
         return mapOrderToOrderResponse(order);
     }
 
-    // You can add methods for fetching user's orders, updating order status etc.
+    // *** MODIFIED METHOD: Now returns List<UserOrderResponse> ***
+    public List<UserOrderResponse> getByUser(Long userId) {
+        userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+
+        List<Order> orders = orderRepository.findByUserId(userId);
+
+        // Map each Order entity to a UserOrderResponse DTO
+        return orders.stream()
+                     .map(this::mapOrderToOrderResponse) // Use the existing mapping method
+                     .collect(Collectors.toList());
+    }
 
     private UserOrderResponse mapOrderToOrderResponse(Order order) {
-        List<OrderItemDto> itemDTOs = order.getItems().stream()
-                .map(item -> {
-                    OrderItemDto dto = new OrderItemDto();
-                    dto.setProductId(item.getProductId());
-                    dto.setName(item.getName());
-                    dto.setPrice(item.getPrice());
-                    dto.setQuantity(item.getQuantity());
-                    dto.setImageUrl(item.getImageUrl());
-                    dto.setCategory(item.getCategory());
-                    return dto;
-                })
+        List<OrderItemResponse> itemDTOs = order.getItems().stream()
+                .map(item -> new OrderItemResponse(
+                        item.getId(),
+                        item.getProductId(),
+                        item.getName(),
+                        item.getQuantity(),
+                        item.getPrice(),
+                        item.getImageUrl(),
+                        item.getCategory()
+                ))
                 .collect(Collectors.toList());
 
         return new UserOrderResponse(
@@ -113,7 +124,8 @@ public class OrderService {
                 order.getPaymentMethod(),
                 order.getStatus(),
                 order.getOrderDate(),
-                order.getRazorpayPaymentId() // Include for Razorpay orders
+                order.getRazorpayOrderId()
+              
         );
     }
 }

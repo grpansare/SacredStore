@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.ecomm.app.enums.*;
 import com.ecomm.app.models.OrderItem;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "orders") // Mapped to a database table named "orders"
@@ -25,6 +26,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY) // Many orders to one user
     @JoinColumn(name = "user_id", nullable = false) // Foreign key column
+    @JsonIgnore	
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true) // One order to many order items

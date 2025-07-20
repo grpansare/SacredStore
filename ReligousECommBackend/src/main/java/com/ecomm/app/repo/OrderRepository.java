@@ -1,5 +1,7 @@
 package com.ecomm.app.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
  // <-- This is the package declaration
@@ -23,7 +25,7 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     // etc.
 
     // You can add custom query methods here if needed, for example:
-    // List<Order> findByUserId(String userId);
+     List<Order> findByUserId(Long userId);
     // List<Order> findByStatus(OrderStatus status);
     // @Query("SELECT o FROM Order o WHERE o.orderDate BETWEEN :startDate AND :endDate")
     // List<Order> findOrdersBetweenDates(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);

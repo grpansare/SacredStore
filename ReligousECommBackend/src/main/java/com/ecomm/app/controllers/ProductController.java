@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecomm.app.models.Product;
+import com.ecomm.app.repo.ProductRepository;
 import com.ecomm.app.services.ProductService;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +24,10 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    
+    
+    @Autowired
+    private ProductRepository productRepository;
 
     // GET all or filtered products
     @GetMapping
@@ -83,13 +90,7 @@ public class ProductController {
     }
 
     // Search by name
-    @GetMapping("/search")
-    public List<Product> searchProducts(@RequestParam String name) {
-        logger.info("Searching products with name: {}", name);
-        List<Product> results = productService.searchProducts(name);
-        logger.debug("Found {} products matching '{}'", results.size(), name);
-        return results;
-    }
+   
 
     // Get by category
     @GetMapping("/category/{category}")
@@ -103,5 +104,50 @@ public class ProductController {
             logger.error("Error fetching products by category '{}': {}", category, e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    
+    
+    @GetMapping("/suggestions")
+    public ResponseEntity<List<String>> getProductSuggestions(
+            @RequestParam(name = "q", required = false) String query,
+            @RequestParam(name = "limit", defaultValue = "10") int limit) {
+
+        if (query == null || query.trim().length() < 2) {
+            // Return empty list if query is null or too short (less than 2 characters)
+            return ResponseEntity.ok(List.of());
+        }
+
+        // Use the repository to find products matching the query
+        List<Product> matchingProducts = productRepository.findByNameContainingIgnoreCase(query.trim());
+
+        // Extract just the names and apply limit
+        List<String> suggestions = matchingProducts.stream()
+                .map(Product::getName) // Get only the name of the product
+                .limit(limit)         // Apply the limit
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(suggestions);
+    }
+    
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProducts(
+            @RequestParam(name = "q", required = false) String query) {
+
+        if (query == null || query.trim().isEmpty()) {
+            // Return Bad Request if query is empty or not provided
+            // Or, return all products, depending on desired behavior for empty search
+            // For now, let's return an empty list for an empty query
+            return ResponseEntity.ok(List.of());
+        }
+
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(query.trim());
+
+        if (products.isEmpty()) {
+            // Optionally, return 404 if no products are found, or just an empty 200 list
+            // For search, an empty 200 list is usually fine, so the frontend can display "No results"
+            return ResponseEntity.ok(List.of());
+        }
+
+        return ResponseEntity.ok(products);
     }
 }
