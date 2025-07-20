@@ -15,8 +15,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import ProductCard from "../Components/ProductCard"; // Adjust path if needed
 
-// Import the new FilterPanel component
-import FilterPanel from "../components/FilterPanel"; // Adjust path if needed
+
+import FilterPanel from "../Components/FilterPanel"; 
 
 const ProductPage = () => {
   const { categoryName } = useParams();
