@@ -24,7 +24,7 @@ import com.ecomm.app.services.CartService;
 
 @RestController
 @RequestMapping("/api/cart")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://sacredstore-2.onrender.com")
 public class CartController {
 
     @Autowired private CartService cartService;
