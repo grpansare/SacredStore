@@ -12,7 +12,7 @@ import com.ecomm.app.services.FileStorageService;
 
 @RestController
 @RequestMapping("/api/images") 
-@CrossOrigin(origins = "http://localhost:5173") 
+
 public class ImageUploadController {
 
     private final FileStorageService fileStorageService;
