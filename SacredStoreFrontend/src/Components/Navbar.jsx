@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"; // Added useEffect, useRef
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../store/userSlice";
+import { logout } from "../store/UserSlice";
 import { useCart } from "../context/CartContext";
 
 // MUI Components
