@@ -23,7 +23,7 @@ import { ProductForm } from "../Components/ProductForm";
 import ProductGrid from "../Components/ProductsGrid";
 import { useDispatch, useSelector } from "react-redux";
 
-const API_BASE_URL = "http://localhost:8080/api/products";
+const API_BASE_URL = "https://sacredstore.onrender.com/api/products";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("products");
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
   const fetchRecentOrders = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/orders/recent"
+        "https://sacredstore.onrender.com/api/orders/recent"
       );
       setRecentOrders(response.data);
       setDashboardStats((prevStats) => ({

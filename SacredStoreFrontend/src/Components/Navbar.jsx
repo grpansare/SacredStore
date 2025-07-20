@@ -52,7 +52,7 @@ const Navbar = ({ setSelectedCategory }) => {
       try {
         // Replace with your actual API endpoint for suggestions
         // This endpoint should be light and return minimal data (e.g., just names)
-        const response = await axios(`http://localhost:8080/api/products/suggestions?q=${encodeURIComponent(searchTerm.trim())}`);
+        const response = await axios(`https://sacredstore.onrender.com/api/products/suggestions?q=${encodeURIComponent(searchTerm.trim())}`);
         // Check if the response is ok
         if (response.status !== 200) {
           throw new Error(`HTTP error! status: ${response.status}`);

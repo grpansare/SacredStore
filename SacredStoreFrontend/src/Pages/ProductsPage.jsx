@@ -49,10 +49,10 @@ const ProductPage = () => {
         let response;
 
         if (categoryName === "all-products") {
-          response = await axios.get("http://localhost:8080/api/products");
+          response = await axios.get("https://sacredstore.onrender.com/api/products");
         } else {
           response = await axios.get(
-            `http://localhost:8080/api/products/category/${encodeURIComponent(
+            `https://sacredstore.onrender.com/api/products/category/${encodeURIComponent(
               formattedCategory
             )}`
           );

@@ -112,7 +112,7 @@ export const ProductForm = ({ product, onClose, onSave }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/images/upload",
+        "https://sacredstore.onrender.com/api/images/upload",
         formData,
         {
           headers: {

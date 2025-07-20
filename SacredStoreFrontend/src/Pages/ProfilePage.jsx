@@ -9,8 +9,8 @@ import axios from "axios"; // Import axios
 const MySwal = withReactContent(Swal);
 
 // Define your backend API base URL
-// Make sure this matches your Spring Boot backend URL (e.g., http://localhost:8080)
-const API_BASE_URL = "http://localhost:8080/api"; // Or your deployed backend URL
+// Make sure this matches your Spring Boot backend URL (e.g., https://sacredstore.onrender.com)
+const API_BASE_URL = "https://sacredstore.onrender.com/api"; // Or your deployed backend URL
 
 const ProfilePage = () => {
   const dispatch = useDispatch();

@@ -19,7 +19,7 @@ const RazorpayPaymentButton = () => {
     try {
       // Step 1: Create an order on your Spring Boot backend
       const { data } = await axios.post(
-        "http://localhost:8080/api/razorpay/create-order",
+        "https://sacredstore.onrender.com/api/razorpay/create-order",
         {
           // <--- UPDATED URL
           amount: amountInPaise,
@@ -55,7 +55,7 @@ const RazorpayPaymentButton = () => {
           // Step 3: Send payment details to your Spring Boot backend for verification
           try {
             const verificationResponse = await axios.post(
-              "http://localhost:8080/api/razorpay/verify-payment",
+              "https://sacredstore.onrender.com/api/razorpay/verify-payment",
               {
                 // <--- UPDATED URL
                 razorpay_order_id: response.razorpay_order_id,

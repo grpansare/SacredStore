@@ -101,7 +101,7 @@ const ReligiousOrdersPage = () => {
   const getOrder = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/orders/getOrders/${user.id}`,
+        `https://sacredstore.onrender.com/api/orders/getOrders/${user.id}`,
         {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,

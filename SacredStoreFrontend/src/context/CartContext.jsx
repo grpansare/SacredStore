@@ -142,7 +142,7 @@ export const CartProvider = ({ children }) => {
             );
             try {
               // 1. Fetch backend cart
-              const res = await axios.get("http://localhost:8080/api/cart", {
+              const res = await axios.get("https://sacredstore.onrender.com/api/cart", {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
               });
               const backendCartItems = res.data.items.map((item) => ({
@@ -164,13 +164,13 @@ export const CartProvider = ({ children }) => {
               );
 
               // 4. Sync merged cart to backend
-              await axios.delete("http://localhost:8080/api/cart/clear", {
+              await axios.delete("https://sacredstore.onrender.com/api/cart/clear", {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
               });
 
               for (const item of mergedCart) {
                 await axios.post(
-                  "http://localhost:8080/api/cart/add",
+                  "https://sacredstore.onrender.com/api/cart/add",
                   { productId: item.id, quantity: item.quantity },
                   { headers: { Authorization: `Bearer ${user.accessToken}` } }
                 );
@@ -194,7 +194,7 @@ export const CartProvider = ({ children }) => {
           } else {
             // Merge already done, just load backend cart
             try {
-              const res = await axios.get("http://localhost:8080/api/cart", {
+              const res = await axios.get("https://sacredstore.onrender.com/api/cart", {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
               });
               const backendCartItems = res.data.items.map((item) => ({
@@ -235,7 +235,7 @@ export const CartProvider = ({ children }) => {
       if (user && user.accessToken) {
         try {
           await axios.post(
-            "http://localhost:8080/api/cart/add",
+            "https://sacredstore.onrender.com/api/cart/add",
             { productId: product.id, quantity: quantity },
             {
               headers: { Authorization: `Bearer ${user.accessToken}` },
@@ -256,7 +256,7 @@ export const CartProvider = ({ children }) => {
       if (user && user.accessToken) {
         try {
           await axios.delete(
-            `http://localhost:8080/api/cart/remove/${productId}`,
+            `https://sacredstore.onrender.com/api/cart/remove/${productId}`,
             {
               headers: { Authorization: `Bearer ${user.accessToken}` },
             }
@@ -279,7 +279,7 @@ export const CartProvider = ({ children }) => {
       if (user && user.accessToken) {
         try {
           await axios.put(
-            "http://localhost:8080/api/cart/update",
+            "https://sacredstore.onrender.com/api/cart/update",
             { productId, quantity },
             {
               headers: { Authorization: `Bearer ${user.accessToken}` },
@@ -298,7 +298,7 @@ export const CartProvider = ({ children }) => {
 
     if (user && user.accessToken) {
       try {
-        await axios.delete("http://localhost:8080/api/cart/clear", {
+        await axios.delete("https://sacredstore.onrender.com/api/cart/clear", {
           headers: { Authorization: `Bearer ${user.accessToken}` },
         });
       } catch (error) {

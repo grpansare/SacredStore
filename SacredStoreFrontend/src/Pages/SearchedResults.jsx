@@ -47,7 +47,7 @@ const SearchResultsPage = () => {
         // IMPORTANT: Replace with your actual backend search endpoint
         // This endpoint should take a 'q' or 'query' parameter and return matching products
         const response = await axios(
-          `http://localhost:8080/api/products/search?q=${encodeURIComponent(
+          `https://sacredstore.onrender.com/api/products/search?q=${encodeURIComponent(
             searchQuery
           )}`
         );

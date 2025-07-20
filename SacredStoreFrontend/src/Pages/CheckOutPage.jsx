@@ -105,7 +105,7 @@ const CheckoutPage = () => {
       // 1. Create an order on your Spring Boot backend for Razorpay
       // This step generates a Razorpay Order ID on your backend and returns it.
       const orderCreationResponse = await axios.post(
-        "http://localhost:8080/api/razorpay/create-order",
+        "https://sacredstore.onrender.com/api/razorpay/create-order",
         {
           amount: amountInPaise,
           currency: "INR",
@@ -144,7 +144,7 @@ const CheckoutPage = () => {
           try {
             // 3. Verify payment on your backend
             const verificationResponse = await axios.post(
-              "http://localhost:8080/api/razorpay/verify-payment",
+              "https://sacredstore.onrender.com/api/razorpay/verify-payment",
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
@@ -188,7 +188,7 @@ const CheckoutPage = () => {
               );
 
               const placeOrderResponse = await axios.post(
-                "http://localhost:8080/api/orders/place-razorpay-order",
+                "https://sacredstore.onrender.com/api/orders/place-razorpay-order",
                 finalOrderPayload,
                 {
                   headers: {
@@ -334,7 +334,7 @@ const CheckoutPage = () => {
     try {
       // Your existing COD order placement API call
       const response = await axios.post(
-        "http://localhost:8080/api/orders/place-cod-order",
+        "https://sacredstore.onrender.com/api/orders/place-cod-order",
         orderData,
         {
           headers: {
