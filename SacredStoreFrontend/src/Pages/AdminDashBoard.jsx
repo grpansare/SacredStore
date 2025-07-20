@@ -16,7 +16,7 @@ import {
   Cross,
 } from "lucide-react";
 
-import { logout } from "../store/userSlice";
+import { logout } from "../store/UserSlice";
 import Swal from "sweetalert2";
 
 import { ProductForm } from "../Components/ProductForm";
