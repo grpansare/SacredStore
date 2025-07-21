@@ -21,17 +21,18 @@ SacredStore is a comprehensive e-commerce solution designed specifically for rel
     * Add new products with descriptions, images, pricing, and category assignments.
     * Edit existing product details.
     * Manage product inventory.
-    *  Categorize products for easier navigation.
+    * Categorize products for easier navigation.
+
+
 
 ---
 
 ## Technologies Used
 
-* **(Backend Technology):**Spring Boot
-* **(Frontend Technology):** e.g., React
-* **(Database):**  MySQL
+* **Backend:** Spring Boot (Java)
+* **Frontend:** React.js
+* **Database:** MySQL
 * **Payment Gateway:** Razorpay
-
 
 ---
 
@@ -39,6 +40,14 @@ SacredStore is a comprehensive e-commerce solution designed specifically for rel
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+* **Java Development Kit (JDK) 11 or higher**
+* **Maven** or **Gradle** (for Spring Boot backend)
+* **Node.js** (LTS version recommended) and **npm** (comes with Node.js)
+* **MySQL Server** running locally or accessible remotely
 
 ### Installation
 
@@ -48,29 +57,36 @@ These instructions will get you a copy of the project up and running on your loc
     cd SacredStore
     ```
 
-2.  **Backend Setup:**
+2.  **Backend Setup (Spring Boot):**
     ```bash
     cd backend
-    npm install # or pip install -r requirements.txt, bundle install, composer install
-    # Configure your database connection in a .env file or configuration file
-    # Run database migrations if applicable
-    # Start the backend server
-    npm start # or python manage.py runserver, rails s, php artisan serve
+    # If using Maven:
+    mvn clean install
+    # If using Gradle:
+    # gradle build
+    # Configure your database connection in src/main/resources/application.properties or application.yml
+    # For example:
+    # spring.datasource.url=jdbc:mysql://localhost:3306/sacredstore_db
+    # spring.datasource.username=your_mysql_username
+    # spring.datasource.password=your_mysql_password
+    # Run the Spring Boot application
+    mvn spring-boot:run
+    # Or from your IDE (e.g., IntelliJ IDEA, Eclipse) run the main application class
     ```
 
-3.  **Frontend Setup:**
+3.  **Frontend Setup (React.js):**
     ```bash
     cd frontend
-    npm install # or yarn install
-    # Configure API endpoint for backend in .env file or configuration file
-    # Start the frontend development server
-    npm start # or yarn start
+    npm install
+    # Configure the API endpoint for your backend in a .env file (e.g., .env.development)
+    # Example: REACT_APP_API_URL=http://localhost:8080/api
+    npm start
     ```
 
 ### Configuration
 
-* **Razorpay API Keys:** Obtain your API keys from the [Razorpay Dashboard](https://dashboard.razorpay.com/). You will need to set these in your backend environment variables or configuration files.
-* **Database Configuration:** Update the database connection settings in your backend.
+* **Razorpay API Keys:** Obtain your API keys (Key ID and Key Secret) from the [Razorpay Dashboard](https://dashboard.razorpay.com/). You will need to set these in your **Spring Boot backend's configuration** (e.g., `application.properties` or environment variables).
+* **Database Configuration:** Update the MySQL database connection settings in your Spring Boot `application.properties` or `application.yml` file. Remember to create the database (`sacredstore_db` or your chosen name) in MySQL beforehand.
 
 ---
 
@@ -89,15 +105,13 @@ These instructions will get you a copy of the project up and running on your loc
 1.  Log in to the admin dashboard using your administrator credentials.
 2.  Use the navigation menu to:
     * Manage **Products**: Add new products, edit existing ones, update stock.
-    * Manage **Orders**: View, process, and update the status of customer orders.
-    * Manage **Users**: View registered users.
-    * (If applicable) Access other administrative features like sales reports.
+   
 
 ---
 
 ## Contributing
 
-We welcome contributions to DivineCart! Please follow these steps:
+We welcome contributions to SacredStore! Please follow these steps:
 
 1.  Fork the repository.
 2.  Create a new branch (`git checkout -b feature/your-feature-name`).
