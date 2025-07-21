@@ -131,4 +131,4 @@ We welcome contributions to SacredStore! Please follow these steps:
 
 ## Contact
 
-For any inquiries or support, please contact grpansare2002@gmail.com].
+For any inquiries or support, please contact grpansare2002@gmail.com.
