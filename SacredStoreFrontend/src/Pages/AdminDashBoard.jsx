@@ -13,7 +13,7 @@ import {
   Filter,
   Eye,
   Star,
-  Cross,
+  X, // Changed 'Cross' to 'X' from 'lucide-react' for better semantic naming if it represents a close/multiply icon
 } from "lucide-react";
 
 import { logout } from "../store/UserSlice";
@@ -33,7 +33,6 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All Categories");
   const [recentOrders, setRecentOrders] = useState([]);
-  // const {logout}=useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [dashboardStats, setDashboardStats] = useState({
     totalRevenue: 0,
@@ -89,6 +88,7 @@ const AdminDashboard = () => {
       }));
     } catch (error) {
       console.error("Error fetching recent orders:", error);
+      // Fallback data for recent orders
       setRecentOrders([
         {
           id: "ORD-001",
@@ -309,7 +309,7 @@ const AdminDashboard = () => {
     if (activeTab === "dashboard") {
       fetchDashboardStats();
       fetchRecentOrders();
-      fetchProducts();
+      fetchProducts(); // Ensure products are fetched to get totalProducts stat
     } else if (activeTab === "products") {
       fetchProducts();
     }
@@ -366,12 +366,12 @@ const AdminDashboard = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="text-left p-3">Order ID</th>
-                <th className="text-left p-3">Customer</th>
-                <th className="text-left p-3">Product</th>
-                <th className="text-left p-3">Amount</th>
-                <th className="text-left p-3">Status</th>
-                <th className="text-left p-3">Date</th>
+                <th className="text-left p-3 min-w-[100px]">Order ID</th>
+                <th className="text-left p-3 min-w-[120px]">Customer</th>
+                <th className="text-left p-3 min-w-[150px]">Product</th>
+                <th className="text-left p-3 min-w-[80px]">Amount</th>
+                <th className="text-left p-3 min-w-[100px]">Status</th>
+                <th className="text-left p-3 min-w-[100px]">Date</th>
               </tr>
             </thead>
             <tbody>
@@ -384,10 +384,13 @@ const AdminDashboard = () => {
                   <td className="p-3">
                     <span
                       className={`px-2 py-1 rounded-full text-xs ${
-                      order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                        order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
-                          order.status === 'Processing' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-gray-100 text-gray-800'
+                        order.status === "Delivered"
+                          ? "bg-green-100 text-green-800"
+                          : order.status === "Shipped"
+                          ? "bg-blue-100 text-blue-800"
+                          : order.status === "Processing"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-gray-100 text-gray-800"
                       }`}
                     >
                       {order.status}
@@ -405,14 +408,16 @@ const AdminDashboard = () => {
 
   const renderProducts = () => (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Product Management</h2>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <h2 className="text-2xl font-semibold mb-4 sm:mb-0">
+          Product Management
+        </h2>
         <button
           onClick={() => {
             setSelectedProduct(null);
             setShowAddProduct(true);
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2 w-full sm:w-auto justify-center"
         >
           <Plus className="w-4 h-4" />
           <span>Add Product</span>
@@ -422,7 +427,7 @@ const AdminDashboard = () => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search products..."
@@ -432,9 +437,9 @@ const AdminDashboard = () => {
             />
           </div>
           <div className="relative">
-            <Filter className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <select
-              className="pl-10 pr-8 py-2 border rounded-md"
+              className="w-full sm:w-auto pl-10 pr-8 py-2 border rounded-md appearance-none" // Added appearance-none to prevent default select arrow
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
             >
@@ -445,9 +450,20 @@ const AdminDashboard = () => {
                 </option>
               ))}
             </select>
+            {/* Custom arrow for select element */}
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg
+                className="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
           </div>
         </div>
 
+        {/* ProductGrid should be responsive internally (e.g., using a grid with responsive columns) */}
         <ProductGrid
           products={products}
           setSelectedProduct={setSelectedProduct}
@@ -465,33 +481,44 @@ const AdminDashboard = () => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search orders..."
               className="w-full pl-10 pr-4 py-2 border rounded-md"
             />
           </div>
-          <select className="px-4 py-2 border rounded-md">
-            <option>All Status</option>
-            <option>Pending</option>
-            <option>Processing</option>
-            <option>Shipped</option>
-            <option>Delivered</option>
-          </select>
+          <div className="relative">
+            <select className="w-full sm:w-auto px-4 py-2 border rounded-md appearance-none">
+              <option>All Status</option>
+              <option>Pending</option>
+              <option>Processing</option>
+              <option>Shipped</option>
+              <option>Delivered</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg
+                className="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="text-left p-3">Order ID</th>
-                <th className="text-left p-3">Customer</th>
-                <th className="text-left p-3">Product</th>
-                <th className="text-left p-3">Amount</th>
-                <th className="text-left p-3">Status</th>
-                <th className="text-left p-3">Date</th>
-                <th className="text-left p-3">Actions</th>
+                <th className="text-left p-3 min-w-[100px]">Order ID</th>
+                <th className="text-left p-3 min-w-[120px]">Customer</th>
+                <th className="text-left p-3 min-w-[150px]">Product</th>
+                <th className="text-left p-3 min-w-[80px]">Amount</th>
+                <th className="text-left p-3 min-w-[100px]">Status</th>
+                <th className="text-left p-3 min-w-[100px]">Date</th>
+                <th className="text-left p-3 min-w-[80px]">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -505,11 +532,14 @@ const AdminDashboard = () => {
                     <select
                       defaultValue={order.status}
                       className={`px-2 py-1 rounded-full text-xs border-none ${
-                        order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                          order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
-                            order.status === 'Processing' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-gray-100 text-gray-800'
-                        }`}
+                        order.status === "Delivered"
+                          ? "bg-green-100 text-green-800"
+                          : order.status === "Shipped"
+                          ? "bg-blue-100 text-blue-800"
+                          : order.status === "Processing"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
                     >
                       <option>Pending</option>
                       <option>Processing</option>
@@ -579,14 +609,15 @@ const AdminDashboard = () => {
       }
     });
   };
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
+      <div className="w-64 bg-white shadow-lg flex-shrink-0">
         <div className="p-6">
           <div className="flex items-center space-x-2">
             <div className="bg-blue-600 p-2 rounded-lg">
-              <Cross className="w-6 h-6 text-white" />
+              <X className="w-6 h-6 text-white" /> {/* Changed from Cross to X */}
             </div>
             <h1 className="text-xl font-bold text-gray-800">Sacred Store</h1>
           </div>
@@ -598,8 +629,10 @@ const AdminDashboard = () => {
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center space-x-3 px-6 py-3 text-left hover:bg-blue-50 transition-colors ${
-                activeTab === item.id ? 'bg-blue-50 border-r-4 border-blue-600 text-blue-600' : 'text-gray-600'
-                }`}
+                activeTab === item.id
+                  ? "bg-blue-50 border-r-4 border-blue-600 text-blue-600"
+                  : "text-gray-600"
+              }`}
             >
               <item.icon className="w-5 h-5" />
               <span>{item.label}</span>
@@ -608,18 +641,21 @@ const AdminDashboard = () => {
 
           <button
             onClick={() => handleLogout()}
-            className={`w-full flex items-center space-x-3 px-6 py-3 text-left hover:bg-blue-50 transition-colors
-                `}
+            className={`w-full flex items-center space-x-3 px-6 py-3 text-left hover:bg-blue-50 transition-colors`}
           >
-            <Cross className="w-5 h-5" />
+            <X className="w-5 h-5 text-red-600" /> {/* Changed from Cross to X */}
             <span className="text-red-600">Logout</span>
           </button>
         </nav>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-8">
+      <div className="flex-1 overflow-y-auto">
+        {" "}
+        {/* Changed overflow-auto to overflow-y-auto for vertical scrolling */}
+        <div className="p-4 sm:p-8">
+          {" "}
+          {/* Adjusted padding for smaller screens */}
           {activeTab === "dashboard" && renderDashboard()}
           {activeTab === "products" && renderProducts()}
           {activeTab === "orders" && renderOrders()}
@@ -635,7 +671,7 @@ const AdminDashboard = () => {
             setShowAddProduct(false);
             setSelectedProduct(null);
           }}
-          onSave={handleSaveProduct}
+          onSave={handleSaveProductWithConfirmation} {/* Use confirmation handler */}
         />
       )}
     </div>
