@@ -9,6 +9,7 @@ import axios from "axios"; // For making API requests
 import { useSelector } from "react-redux";
 import { useCart } from "../context/CartContext"; // Assuming you have a CartContext for managing cart state
 import ProductModal from "../Components/ProductModal";
+import ProductCard from "../Components/ProductCard"; // Assuming you have a ProductCard component
 
 const SearchResultsPage = () => {
   const location = useLocation();
@@ -139,10 +140,7 @@ const SearchResultsPage = () => {
               variants={itemVariants}
               onClick={() => handleModalOpen(product)}
             >
-             
-               <ProductCard
-                product={product} 
-                />
+              <ProductCard product={product} />
             </motion.div>
           ))}
         </motion.div>
@@ -157,4 +155,3 @@ const SearchResultsPage = () => {
 };
 
 export default SearchResultsPage;
-
