@@ -79,14 +79,20 @@ public class ProductController {
 
     // DELETE product
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        logger.info("Deleting product ID: {}", id);
-        if (productService.deleteProduct(id)) {
-            logger.debug("Product deleted successfully: {}", id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        logger.warn("Product delete failed, ID not found: {}", id);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        try {
+			logger.info("Deleting product ID: {}", id);
+			if (productService.deleteProduct(id)) {
+			    logger.debug("Product deleted successfully: {}", id);
+			    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+			logger.warn("Product delete failed, ID not found: {}", id);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+		}
     }
 
     // Search by name
