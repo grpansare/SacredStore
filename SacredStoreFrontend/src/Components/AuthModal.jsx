@@ -385,7 +385,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           </form>
 
           {/* Social Login */}
-          <div className="mt-6 relative z-10">
+          {/* <div className="mt-6 relative z-10">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200"></div>
@@ -428,7 +428,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 </svg>
               </button>
             </div>
-          </div>
+          </div> */}
 
           {/* Footer */}
           <div className="mt-6 text-center relative z-10">

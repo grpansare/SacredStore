@@ -363,7 +363,7 @@ const Navbar = ({ setSelectedCategory }) => {
           </div>
            <div className="md:hidden flex justify-between items-center h-16">
             {/* Search Bar - Mobile */}
-            <div className="md:hidden   flex-1 max-w-lg mx-4 relative" ref={mobileSearchInputRef}> {/* Added ref and relative */}
+            {/* <div className="md:hidden   flex-1 max-w-lg mx-4 relative" ref={mobileSearchInputRef}> 
               <form onSubmit={handleSearchSubmit} className="w-full">
                 <input
                   type="text"
@@ -377,7 +377,7 @@ const Navbar = ({ setSelectedCategory }) => {
                     <Search className="w-5 h-5 text-gray-400 hover:text-orange-500" />
                 </button>
               </form>
-              {/* Mobile Suggestions */}
+          
               {showSuggestions && suggestions.length > 0 && (
                 <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg top-full shadow-lg max-h-60 overflow-y-auto">
                   {suggestions.map((suggestion, index) => (
@@ -391,7 +391,7 @@ const Navbar = ({ setSelectedCategory }) => {
                   ))}
                 </ul>
               )}
-            </div>
+            </div> */}
             </div>
             
 
