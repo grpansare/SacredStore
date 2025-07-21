@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import React, { use, useEffect, useState } from 'react'
-import HomepageCard from './HomepageCard'; // Assuming you have a HomepageCard component
+import  HomepageProductCard from './HomepageCard'; // Assuming you have a HomepageCard component
 import axios from 'axios'; // For making API requests
 import { useNavigate } from 'react-router-dom'; // For navigation
 
@@ -44,7 +44,7 @@ const FeaturedProducts = ({handleAddToCart}) => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {featuredProducts.map((product) => (
-            <HomepageCard key={product.id} product={product} handleAddToCart={handleAddToCart} />
+            <HomepageProductCard key={product.id} product={product} handleAddToCart={handleAddToCart} />
           ))}
         </div>
       </section>

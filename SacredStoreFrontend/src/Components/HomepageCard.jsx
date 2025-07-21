@@ -7,7 +7,7 @@ import axios from 'axios'; // For making API requests
 import { useSelector } from 'react-redux'; // For accessing user state
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux'; // For dispatching actions
- // Assuming you have an action to fetch featured products
+
     const HomepageProductCard = ({ product ,handleAddToCart}) => {
     const [addedToCartFeedback, setAddedToCartFeedback] = useState(false);
 
