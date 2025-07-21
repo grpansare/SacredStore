@@ -111,9 +111,6 @@ Before you begin, ensure you have the following installed:
 1.  Log in to the admin dashboard using your administrator credentials.
 2.  Use the navigation menu to:
     * Manage **Products**: Add new products, edit existing ones, update stock.
-    * Manage **Orders**: View, process, and update the status of customer orders.
-    * Manage **Users**: View registered users.
-    * (If applicable) Access other administrative features like sales reports.
 
 ---
 
@@ -130,12 +127,8 @@ We welcome contributions to SacredStore! Please follow these steps:
 
 ---
 
-## License
-
-This project is licensed under the [Your Chosen License] - see the [LICENSE.md](LICENSE.md) file for details.
-
 ---
 
 ## Contact
 
-For any inquiries or support, please contact [Your Name/Email Address/Support Link].
+For any inquiries or support, please contact grpansare2002@gmail.com].
