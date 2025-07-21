@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import FeaturedProducts from "../Components/FeaturedProducts";
 
 // ProductPage and Navbar are no longer imported here, as they are handled by App.jsx and Routes.
 
@@ -254,7 +255,7 @@ const Homepage = ({ handleAddToCart }) => {
               {heroSlides[currentSlide].subtitle}
             </p>
             <button
-             onClick={() => navigate(`/products/${category.fetchName}`)}
+             onClick={() => navigate(`/products/${heroSlides[currentSlide].link}`)} // Navigate to the first category
             className="bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
               {heroSlides[currentSlide].cta}
               <ChevronRight className="inline w-5 h-5 ml-2" />
@@ -354,7 +355,7 @@ const Homepage = ({ handleAddToCart }) => {
           </div>
         </div>
       </section>
-   
+      <FeaturedProducts/>
 
       {/* Special Offers Banner */}
       <section className="py-16 px-4 bg-gradient-to-r from-orange-500 to-red-600">
