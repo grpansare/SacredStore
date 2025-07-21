@@ -139,35 +139,10 @@ const SearchResultsPage = () => {
               variants={itemVariants}
               onClick={() => handleModalOpen(product)}
             >
-              {/* Assuming product has an imageUrl property */}
-              {product.imageUrl ? (
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-48 object-cover object-center transform transition-transform duration-300 hover:scale-105"
+             
+               <ProductCard
+                product={product} 
                 />
-              ) : (
-                <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-                  No Image
-                </div>
-              )}
-              <div className="p-4">
-                <h3 className="font-semibold text-lg text-gray-800 mb-1 truncate">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                  {product.description}
-                </p>
-                <div className="flex justify-between items-center mt-3">
-                  <p className="text-orange-600 font-bold text-xl">
-                    ₹{product.price ? product.price.toFixed(2) : "N/A"}
-                  </p>
-                  {/* Add to Cart button - you'll likely integrate useCart here */}
-                  {/* <button className="bg-orange-500 text-white px-3 py-1 rounded-md text-sm hover:bg-orange-600 transition-colors">
-                    Add to Cart
-                  </button> */}
-                </div>
-              </div>
             </motion.div>
           ))}
         </motion.div>

@@ -107,6 +107,20 @@ public class ProductController {
     }
     
     
+    @GetMapping("/featured")
+    public ResponseEntity<?> getFeaturedProducts() {
+        logger.info("Fetching products by category: {}");
+        try {
+            List<Product> products = productRepository.findAll();
+            logger.debug("Found {} products in category '{}'", products.size());
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            logger.error("Error fetching products by category '{}': {}",  e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+    
     @GetMapping("/suggestions")
     public ResponseEntity<List<String>> getProductSuggestions(
             @RequestParam(name = "q", required = false) String query,
