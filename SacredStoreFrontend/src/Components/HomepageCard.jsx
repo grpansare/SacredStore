@@ -3,8 +3,7 @@ import { Heart, Star } from 'lucide-react'; // Assuming you have these icons
 import { useCart } from '../context/CartContext'; // Assuming you have a CartContext for managing cart state
 import { useNavigate } from 'react-router-dom'; // For navigation   
 import axios from 'axios'; // For making API requests
-import { toast } from 'react-toastify'; // For notifications
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
+
 import { useSelector } from 'react-redux'; // For accessing user state
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux'; // For dispatching actions
