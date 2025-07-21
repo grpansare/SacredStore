@@ -361,38 +361,7 @@ const Navbar = ({ setSelectedCategory }) => {
               )}
             </button>
           </div>
-           <div className="md:hidden flex justify-between items-center h-16">
-            {/* Search Bar - Mobile */}
-            {/* <div className="md:hidden   flex-1 max-w-lg mx-4 relative" ref={mobileSearchInputRef}> 
-              <form onSubmit={handleSearchSubmit} className="w-full">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  onFocus={() => searchTerm.trim().length > 1 && suggestions.length > 0 && setShowSuggestions(true)} // Show suggestions on focus if there's a term and suggestions
-                />
-                <button type="submit" className="absolute right-3 top-2.5">
-                    <Search className="w-5 h-5 text-gray-400 hover:text-orange-500" />
-                </button>
-              </form>
           
-              {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg top-full shadow-lg max-h-60 overflow-y-auto">
-                  {suggestions.map((suggestion, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800"
-                      onClick={() => handleSuggestionClick(suggestion)}
-                    >
-                      {suggestion}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div> */}
-            </div>
             
 
         </div>
