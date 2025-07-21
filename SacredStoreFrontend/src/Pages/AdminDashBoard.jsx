@@ -671,7 +671,7 @@ const AdminDashboard = () => {
             setShowAddProduct(false);
             setSelectedProduct(null);
           }}
-          onSave={handleSaveProductWithConfirmation} {/* Use confirmation handler */}
+          onSave={handleSaveProductWithConfirmation}
         />
       )}
     </div>
