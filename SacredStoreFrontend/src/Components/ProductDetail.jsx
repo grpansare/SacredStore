@@ -70,7 +70,7 @@ const ProductDetail = ({ product, onBack, onAddToCart }) => {
 
             <div className="flex items-baseline gap-3 mb-6">
               <span className="text-3xl font-bold text-gray-900">
-                ${product.price}
+                ₹{product.price}
               </span>
               {product.originalPrice &&
                 product.originalPrice > product.price && (

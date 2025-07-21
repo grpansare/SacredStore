@@ -42,15 +42,15 @@ const ProductsGrid = ({
                     {product.category}
                   </p>
 
-                  {/* Price and Original Price */}
+                  
                   <div className="flex items-baseline space-x-2 mb-2">
                     <span className="text-xl font-bold text-gray-900">
-                      ${product.price.toFixed(2)}
+                      ₹{product.price.toFixed(2)}
                     </span>
                     {product.originalPrice &&
                       product.originalPrice > product.price && (
                         <span className="text-sm text-gray-500 line-through">
-                          ${product.originalPrice.toFixed(2)}
+                          ₹{product.originalPrice.toFixed(2)}
                         </span>
                       )}
                   </div>
