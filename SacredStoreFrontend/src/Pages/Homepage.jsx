@@ -117,30 +117,36 @@ const Homepage = ({ handleAddToCart }) => {
       subtitle: "Discover sacred items for your spiritual journey",
       image: "/assets/ganesh-idol.jpg",
       cta: "Shop Now",
+      link: "/products/Idols & Statues", 
     },
     {
       title: "Festival Special Collection",
       subtitle: "Celebrate with authentic religious products",
       image: "/assets/diya.webp",
       cta: "Explore Deals",
+      link: "/products/all-products",
     },
     {
       title: "Sacred Books & Scriptures",
       subtitle: "Expand your spiritual knowledge with ancient wisdom",
       image: "/assets/books.png",
       cta: "Browse Books",
+      link: "/products/Books",
     },
     {
       title: "Handcrafted Jewelry",
       subtitle: "Adorn yourself with sacred symbols and gemstones",
       image: "/assets/jewellery.png",
       cta: "View Collection",
+      link: "/products/Jewelry",
+
     },
     {
       title: "Temple Essentials",
       subtitle: "Everything you need for daily worship and rituals",
       image: "/assets/temple.jpg",
       cta: "Shop Essentials",
+      link: "/products/Prayer Items",
     },
   ];
 
@@ -247,7 +253,9 @@ const Homepage = ({ handleAddToCart }) => {
             <p className="text-xl md:text-2xl mb-8 opacity-90">
               {heroSlides[currentSlide].subtitle}
             </p>
-            <button className="bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
+            <button
+             onClick={() => navigate(`/products/${category.fetchName}`)}
+            className="bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
               {heroSlides[currentSlide].cta}
               <ChevronRight className="inline w-5 h-5 ml-2" />
             </button>
@@ -269,7 +277,7 @@ const Homepage = ({ handleAddToCart }) => {
       </section>
 
       <section className="py-20 px-4 max-w-7xl mx-auto relative">
-        {/* Background decoration */}
+      
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-amber-50/30 rounded-3xl"></div>
 
         <div className="relative z-10">
@@ -346,31 +354,7 @@ const Homepage = ({ handleAddToCart }) => {
           </div>
         </div>
       </section>
-      {/* Featured Products */}
-      <section className="py-16 px-4 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-12">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-              Featured Products
-            </h2>
-            <p className="text-lg text-gray-600">
-              Handpicked items for your spiritual journey
-            </p>
-          </div>
-          <button
-            className="hidden md:flex items-center gap-2 text-orange-600 hover:text-orange-700 font-medium transition-colors"
-            onClick={() => navigate("/products/all-products")} // Navigate to all products
-          >
-            View All
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((product) => (
-            <HomepageProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
+   
 
       {/* Special Offers Banner */}
       <section className="py-16 px-4 bg-gradient-to-r from-orange-500 to-red-600">
