@@ -2,6 +2,7 @@ package com.ecomm.app.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,16 +43,17 @@ public class CartController {
     }
     
     @DeleteMapping
+    @PreAuthorize("permitAll()")
     public String deleteAll() {
-    	try {
-			cartRepository.deleteAll();
-			return "all deleted";
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "not deleted";
-		}
+        try {
+            cartRepository.deleteAll();
+            return "All deleted";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Not deleted";
+        }
     }
+
 
     @PutMapping("/set-item-quantity") // *** NEW ENDPOINT for setting total quantity ***
     public ResponseEntity<Cart> setItemQuantity(@RequestBody CartRequest request,
