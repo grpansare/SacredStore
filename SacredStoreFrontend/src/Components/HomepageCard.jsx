@@ -83,3 +83,5 @@ import { useDispatch } from 'react-redux'; // For dispatching actions
       </div>
     );
   };
+
+export default HomepageProductCard;

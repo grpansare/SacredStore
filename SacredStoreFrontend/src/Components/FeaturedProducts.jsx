@@ -1,8 +1,9 @@
 import { ChevronRight } from 'lucide-react';
 import React, { use, useEffect, useState } from 'react'
-import  HomepageProductCard from './HomepageCard'; // Assuming you have a HomepageCard component
+
 import axios from 'axios'; // For making API requests
 import { useNavigate } from 'react-router-dom'; // For navigation
+import HomepageProductCard from './HomepageCard';
 
 const FeaturedProducts = ({handleAddToCart}) => {
 
