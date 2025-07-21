@@ -22,7 +22,7 @@ import { useDispatch } from 'react-redux'; // For dispatching actions
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
         <div className="relative overflow-hidden rounded-t-xl">
           <img
-            src={product.image}
+            src={product.imageUrl}
             alt={product.name}
             className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
           />

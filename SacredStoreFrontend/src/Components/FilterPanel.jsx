@@ -70,10 +70,10 @@ const FilterPanel = ({
         <h4 className="text-sm font-medium text-gray-700 mb-3">Price Range</h4>
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm text-gray-600">
-            <span>${priceRange[0]}</span>
-            <span>${priceRange[1]}</span>
+            <span>₹{priceRange[0]}</span>
+            <span>₹{priceRange[1]}</span>
           </div>
-          $
+          ₹
           <div className="flex gap-2">
             <input
               type="number"
