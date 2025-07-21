@@ -4,6 +4,12 @@ SacredStore is a comprehensive e-commerce solution designed specifically for rel
 
 ---
 
+## Live Demo
+
+Experience SacredStore live: [https://sacredstore-2.onrender.com](https://sacredstore-2.onrender.com)
+
+---
+
 ## Features
 
 ### User-Facing Features
@@ -105,7 +111,9 @@ Before you begin, ensure you have the following installed:
 1.  Log in to the admin dashboard using your administrator credentials.
 2.  Use the navigation menu to:
     * Manage **Products**: Add new products, edit existing ones, update stock.
-   
+    * Manage **Orders**: View, process, and update the status of customer orders.
+    * Manage **Users**: View registered users.
+    * (If applicable) Access other administrative features like sales reports.
 
 ---
 
