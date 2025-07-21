@@ -19,6 +19,7 @@ import com.ecomm.app.dtos.CartRequest;
 import com.ecomm.app.dtos.UpdateCartRequest;
 import com.ecomm.app.models.Cart;
 import com.ecomm.app.models.User; // Not directly used in controller, can be removed
+import com.ecomm.app.repo.CartRepository;
 import com.ecomm.app.repo.UserRepository; // Not directly used in controller, can be removed
 import com.ecomm.app.services.CartService;
 
@@ -29,6 +30,8 @@ public class CartController {
 
     @Autowired private CartService cartService;
     
+    @Autowired private CartRepository cartRepository;
+    
     // @Autowired UserRepository userRepo; // Not used directly in controller, can be removed
 
     @PostMapping("/add") // This remains for "incrementing" a quantity
@@ -36,6 +39,18 @@ public class CartController {
                                           @AuthenticationPrincipal UserDetails userDetails) {
         Cart updatedCart = cartService.addToCart(userDetails.getUsername(), request.getProductId(), request.getQuantity());
         return ResponseEntity.ok(updatedCart);
+    }
+    
+    @DeleteMapping
+    public String deleteAll() {
+    	try {
+			cartRepository.deleteAll();
+			return "all deleted";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "not deleted";
+		}
     }
 
     @PutMapping("/set-item-quantity") // *** NEW ENDPOINT for setting total quantity ***
@@ -47,6 +62,7 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<Cart> getCart(@AuthenticationPrincipal UserDetails userDetails) {
+    	
         Cart cart = cartService.getCartByUsername(userDetails.getUsername());
         return ResponseEntity.ok(cart);
     }
