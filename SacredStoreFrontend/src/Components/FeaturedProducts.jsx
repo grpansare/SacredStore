@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 
 const FeaturedProducts = () => {
 
