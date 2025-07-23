@@ -14,6 +14,8 @@ import { useCart } from "../context/CartContext";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ProductCard from "../Components/ProductCard"; // Adjust path if needed
+import Loader from "./Loader"; // Import the Loader component
+import "./ProductsPage.css"; // Import custom styles for loader and other components
 
 
 import FilterPanel from "../Components/FilterPanel"; 
@@ -299,7 +301,7 @@ const ProductPage = () => {
         </div>
 
         {loading ? (
-          <div className="text-center py-10">Loading products...</div>
+       <Loader/>
         ) : (
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Filter Panel - Now a separate component */}

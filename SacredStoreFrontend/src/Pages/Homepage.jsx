@@ -118,36 +118,35 @@ const Homepage = ({ handleAddToCart }) => {
       subtitle: "Discover sacred items for your spiritual journey",
       image: "/assets/ganesh-idol.jpg",
       cta: "Shop Now",
-      link: "/products/Idols & Statues", 
+      link: "Idols & Statues",
     },
     {
       title: "Festival Special Collection",
       subtitle: "Celebrate with authentic religious products",
       image: "/assets/diya.webp",
       cta: "Explore Deals",
-      link: "/products/all-products",
+      link: "all-products",
     },
     {
       title: "Sacred Books & Scriptures",
       subtitle: "Expand your spiritual knowledge with ancient wisdom",
       image: "/assets/books.png",
       cta: "Browse Books",
-      link: "/products/Books",
+      link: "Books",
     },
     {
       title: "Handcrafted Jewelry",
       subtitle: "Adorn yourself with sacred symbols and gemstones",
       image: "/assets/jewellery.png",
       cta: "View Collection",
-      link: "/products/Jewelry",
-
+      link: "Jewelry",
     },
     {
       title: "Temple Essentials",
       subtitle: "Everything you need for daily worship and rituals",
       image: "/assets/temple.jpg",
       cta: "Shop Essentials",
-      link: "/products/Prayer Items",
+      link: "Prayer Items",
     },
   ];
 
@@ -157,7 +156,6 @@ const Homepage = ({ handleAddToCart }) => {
     }, 5000);
     return () => clearInterval(timer);
   }, [heroSlides.length]); // Add heroSlides.length to dependency array
-
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -180,8 +178,11 @@ const Homepage = ({ handleAddToCart }) => {
               {heroSlides[currentSlide].subtitle}
             </p>
             <button
-             onClick={() => navigate(`/products/${heroSlides[currentSlide].link}`)} // Navigate to the first category
-            className="bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
+              onClick={() =>
+                navigate(`/products/${heroSlides[currentSlide].link}`)
+              } // Navigate to the first category
+              className="bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg"
+            >
               {heroSlides[currentSlide].cta}
               <ChevronRight className="inline w-5 h-5 ml-2" />
             </button>
@@ -203,7 +204,6 @@ const Homepage = ({ handleAddToCart }) => {
       </section>
 
       <section className="py-20 px-4 max-w-7xl mx-auto relative">
-      
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-amber-50/30 rounded-3xl"></div>
 
         <div className="relative z-10">

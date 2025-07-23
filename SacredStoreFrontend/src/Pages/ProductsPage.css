@@ -1,0 +1,37 @@
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 1.5s ease-out forwards; /* 'forwards' keeps the final state */
+  animation-iteration-count: 1; /* Only play once per load */
+}
+
+/* If you want it to loop and be a continuous loader */
+/*
+@keyframes revealRotate {
+  0% {
+    opacity: 0.5;
+    transform: rotate(0deg) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(180deg) scale(1);
+  }
+  100% {
+    opacity: 0.5;
+    transform: rotate(360deg) scale(0.8);
+  }
+}
+
+.animate-fade-in-scale {
+  animation: revealRotate 2s infinite ease-in-out;
+}
+*/
