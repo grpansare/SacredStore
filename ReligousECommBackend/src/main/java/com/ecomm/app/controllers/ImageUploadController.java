@@ -3,6 +3,8 @@ package com.ecomm.app.controllers;
 
 
 
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,15 +24,8 @@ public class ImageUploadController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        String fileName = fileStorageService.storeFile(file);
-
-        // Construct the file download URI (or simply return the relative path)
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/images/") // This path needs to be exposed statically
-                .path(fileName.substring(fileName.lastIndexOf("/") + 1)) // Get just the file name part
-                .toUriString();
-
-        return ResponseEntity.ok(fileDownloadUri); // Return the URL of the uploaded image
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    	 String imageUrl = fileStorageService.uploadProductImage(file);
+    	    return ResponseEntity.ok(imageUrl);
     }
 }

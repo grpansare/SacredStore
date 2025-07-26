@@ -2,9 +2,16 @@ package com.ecomm.app.services;
 
 
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -12,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,6 +27,9 @@ import java.util.UUID;
 public class FileStorageService {
 
     private final Path fileStorageLocation;
+    
+    @Autowired
+    private Cloudinary cloudinary;
 
     public FileStorageService(@Value("${file.upload-dir}") String uploadDir) {
         this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
@@ -29,6 +40,15 @@ public class FileStorageService {
         }
     }
 
+    
+   
+
+    public String uploadProductImage(MultipartFile file) throws IOException {
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "folder", "ecommerce/products"  // Optional: organize in Cloudinary folder
+        ));
+        return (String) uploadResult.get("secure_url");
+    }
     public String storeFile(MultipartFile file) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
